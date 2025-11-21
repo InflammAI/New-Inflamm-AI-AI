@@ -14,7 +14,6 @@ pool.on('error', (err: Error) => {
   console.error('Unexpected error on idle client', err);
 });
 
-// Normal query function
 export const query = async (text: string, params?: any[]): Promise<QueryResult> => {
   const start = Date.now();
   try {
@@ -30,12 +29,11 @@ export const query = async (text: string, params?: any[]): Promise<QueryResult> 
   }
 };
 
-// ✅ Export ExtendedClient interface
+// ✅ Properly extend PoolClient
 export interface ExtendedClient extends PoolClient {
   lastQuery?: [string, any[]?];
 }
 
-// Get client with query/release overrides
 export const getClient = async (): Promise<ExtendedClient> => {
   const client = (await pool.connect()) as ExtendedClient;
   const originalQuery = client.query.bind(client);
@@ -45,10 +43,9 @@ export const getClient = async (): Promise<ExtendedClient> => {
     console.error('A client has been checked out for more than 5 seconds!');
   }, 5000);
 
-  // Wrap query safely
-  client.query = ((...args: [string, any[]?]) => {
-    client.lastQuery = args;
-    return originalQuery(...args);
+  client.query = ((text: string, params?: any[]) => {
+    client.lastQuery = [text, params];
+    return originalQuery(text, params);
   }) as typeof client.query;
 
   client.release = () => {
@@ -62,3 +59,4 @@ export const getClient = async (): Promise<ExtendedClient> => {
 };
 
 export default { query, getClient, pool };
+

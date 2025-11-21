@@ -5,9 +5,11 @@ import db, { ExtendedClient } from '../config/database';
 const router = express.Router();
 
 // Typed Request with optional user
-interface AuthRequest extends Request {
+interface AuthRequest extends express.Request {
   user?: { walletAddress: string };
+  body: any; // if you use req.body and TS complains
 }
+
 
 // GET /api/v1/vytap/leaderboard
 router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response) => {
