@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --beige: #FFF9F3;
+  --dark-gray: #D84315;
+  --muted-gray: #FF6F00;
+  --primary-orange: #FF9800;
+  --accent-orange: #FFB74D;
+}
+
+body {
+  background-color: var(--beige);
+  color: var(--dark-gray);
+}
+
+/* Ensure Solana wallet adapter modal is visible */
+.wallet-adapter-modal-wrapper {
+  z-index: 99999 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+.wallet-adapter-modal-overlay {
+  z-index: 99998 !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.wallet-adapter-modal {
+  z-index: 99999 !important;
+  display: block !important;
+}
+
+.wallet-adapter-modal-container {
+  z-index: 99999 !important;
+}
+
+/* Style the wallet button to match our design */
+.wallet-adapter-button {
+  background-color: rgb(147, 51, 234) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 600 !important;
+}
+
+.wallet-adapter-button:hover {
+  background-color: rgb(126, 34, 206) !important;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  background-color: rgb(126, 34, 206) !important;
+}
+
+/* Custom scrollbar for horizontal carousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.horizontal-scroll {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.horizontal-scroll > * {
+  scroll-snap-align: start;
+}

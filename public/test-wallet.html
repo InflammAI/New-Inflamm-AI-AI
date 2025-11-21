@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wallet Modal Test</title>
+  <style>
+    body { 
+      background: #1a1a1a; 
+      color: white; 
+      font-family: Arial;
+      padding: 40px;
+      text-align: center;
+    }
+    button {
+      background: purple;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover { background: #6b21a8; }
+    .info { 
+      margin: 20px 0;
+      padding: 20px;
+      background: #2a2a2a;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Wallet Connection Debug Test</h1>
+  
+  <div class="info">
+    <h2>Current Environment:</h2>
+    <p><strong>URL:</strong> <span id="url"></span></p>
+    <p><strong>In Iframe:</strong> <span id="iframe"></span></p>
+    <p><strong>User Agent:</strong> <span id="agent"></span></p>
+  </div>
+
+  <button onclick="testWalletModal()">🔵 Test Wallet Modal</button>
+  <button onclick="openInNewTab()">🔗 Open App in New Tab</button>
+
+  <div class="info">
+    <h3>Test Results:</h3>
+    <div id="results">Click "Test Wallet Modal" to check if wallet modal appears...</div>
+  </div>
+
+  <script>
+    // Display environment info
+    document.getElementById('url').textContent = window.location.href;
+    document.getElementById('iframe').textContent = window.self !== window.top ? 'YES ⚠️' : 'NO ✅';
+    document.getElementById('agent').textContent = navigator.userAgent.substring(0, 80) + '...';
+
+    function testWalletModal() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<p>Testing wallet modal...</p>';
+
+      // Check if Phantom is available
+      if (window.solana && window.solana.isPhantom) {
+        results.innerHTML += '<p>✅ Phantom wallet detected!</p>';
+      } else {
+        results.innerHTML += '<p>❌ Phantom wallet NOT detected (may not work in iframe)</p>';
+      }
+
+      // Check iframe status
+      if (window.self !== window.top) {
+        results.innerHTML += '<p>⚠️ You are in an iframe - wallet extensions cannot work here!</p>';
+        results.innerHTML += '<p>👉 Click "Open App in New Tab" below</p>';
+      } else {
+        results.innerHTML += '<p>✅ Not in iframe - wallet should work!</p>';
+      }
+
+      // Check for wallet adapter
+      setTimeout(() => {
+        const modal = document.querySelector('.wallet-adapter-modal');
+        if (modal) {
+          results.innerHTML += '<p>✅ Wallet modal element found in DOM</p>';
+        } else {
+          results.innerHTML += '<p>❌ Wallet modal element NOT found</p>';
+        }
+      }, 1000);
+    }
+
+    function openInNewTab() {
+      window.open('/inflamm-ai', '_blank');
+    }
+  </script>
+</body>
+</html>
