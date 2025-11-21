@@ -43,10 +43,10 @@ export const getClient = async (): Promise<ExtendedClient> => {
     console.error('A client has been checked out for more than 5 seconds!');
   }, 5000);
 
-  // Wrap query safely without breaking overloads
+  // ✅ fixed TS2556 using apply
   client.query = ((...args: unknown[]) => {
     client.lastQuery = args;
-    return originalQuery(...args);
+    return originalQuery.apply(client, args);
   }) as typeof client.query;
 
   client.release = () => {
