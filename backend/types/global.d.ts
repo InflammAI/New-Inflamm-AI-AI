@@ -1,4 +1,19 @@
-declare module "pg";
-declare module "express";
-declare module "cors";
-declare module "morgan";
+import * as express from "express";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        wallet: string;
+      };
+      walletAddress?: string;
+      sessionSignature?: string;
+      sessionMessage?: string;
+      signature?: string;
+      message?: string;
+    }
+  }
+}
+
+export {};
+
