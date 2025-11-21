@@ -20,16 +20,12 @@
     "types": ["node"]
   },
   "include": [
-    "src/**/*",
-    "routes/**/*",
-    "config/**/*",
-    "middleware/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist"
   ]
 }
-
 
 
