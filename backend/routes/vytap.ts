@@ -10,7 +10,6 @@ router.get('/leaderboard', optionalAuth, async (req, res) => {
     const limit = parseInt(req.query.limit as string) || 10;
     const walletAddress = req.user?.walletAddress;
 
-    // Get top users
     const topUsersQuery = `
       SELECT 
         wallet_address,
@@ -24,9 +23,8 @@ router.get('/leaderboard', optionalAuth, async (req, res) => {
     
     const topUsers = await db.query(topUsersQuery, [limit]);
 
-    // If wallet provided, get user's rank and points
-    let userRank = null;
-    let userPoints = null;
+    let userRank: number | null = null;
+    let userPoints: number | null = null;
     
     if (walletAddress) {
       const userStatsQuery = `
@@ -45,9 +43,7 @@ router.get('/leaderboard', optionalAuth, async (req, res) => {
 
       if (userStats.rows.length > 0) {
         userPoints = userStats.rows[0].total_points;
-        userRank = parseInt(userStats.rows[0].rank);
-        
-        // Mark user's entry in top list if present
+        userRank = parseInt(userStats.rows[0].rank, 10);
         topUsers.rows = topUsers.rows.map((row: any) => ({
           ...row,
           isCurrentUser: row.wallet_address === walletAddress
@@ -55,17 +51,16 @@ router.get('/leaderboard', optionalAuth, async (req, res) => {
       }
     }
 
-    // Get total user count
     const totalUsersResult = await db.query('SELECT COUNT(*) as count FROM users');
-    const totalUsers = parseInt(totalUsersResult.rows[0].count);
+    const totalUsers = parseInt(totalUsersResult.rows[0].count, 10);
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         entries: topUsers.rows.map((row: any) => ({
           userId: row.user_id,
           points: row.points,
-          rank: parseInt(row.rank),
+          rank: parseInt(row.rank, 10),
           isCurrentUser: row.isCurrentUser || false
         })),
         userRank,
@@ -75,7 +70,7 @@ router.get('/leaderboard', optionalAuth, async (req, res) => {
     });
   } catch (error) {
     console.error('Leaderboard error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
+    return res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
   }
 });
 
@@ -85,36 +80,30 @@ router.post('/tap', verifyWallet, async (req, res) => {
     const { walletAddress } = req.user!;
     const { timestamp } = req.body;
 
-    // Verify tap timing (prevent spam)
     const lastTapResult = await db.query(
       'SELECT last_tap_at FROM users WHERE wallet_address = $1',
       [walletAddress]
     );
-    
+
     if (lastTapResult.rows.length > 0 && lastTapResult.rows[0].last_tap_at) {
       const lastTap = new Date(lastTapResult.rows[0].last_tap_at).getTime();
       const now = Date.now();
-      const cooldown = 200; // 200ms cooldown for faster tapping
-      
+      const cooldown = 200;
       if ((now - lastTap) < cooldown) {
         return res.status(429).json({
           success: false,
-          error: 'Tap too quickly. Please wait.',
+          error: 'Tapping too fast, please wait a moment.',
           retryAfter: cooldown - (now - lastTap)
         });
       }
     }
 
-    // Fixed 1 point per tap
     const pointsEarned = 1;
-
-    // Start transaction
     const client = await db.getClient();
     
     try {
       await client.query('BEGIN');
 
-      // Get or create user
       let userResult = await client.query(
         'SELECT id, total_points FROM users WHERE wallet_address = $1',
         [walletAddress]
@@ -124,7 +113,6 @@ router.post('/tap', verifyWallet, async (req, res) => {
       let newTotal: number;
 
       if (userResult.rows.length === 0) {
-        // Create new user
         const createResult = await client.query(
           'INSERT INTO users (wallet_address, total_points, last_tap_at) VALUES ($1, $2, NOW()) RETURNING id, total_points',
           [walletAddress, pointsEarned]
@@ -132,7 +120,6 @@ router.post('/tap', verifyWallet, async (req, res) => {
         userId = createResult.rows[0].id;
         newTotal = pointsEarned;
       } else {
-        // Update existing user
         userId = userResult.rows[0].id;
         const updateResult = await client.query(
           'UPDATE users SET total_points = total_points + $1, last_tap_at = NOW() WHERE id = $2 RETURNING total_points',
@@ -141,22 +128,18 @@ router.post('/tap', verifyWallet, async (req, res) => {
         newTotal = updateResult.rows[0].total_points;
       }
 
-      // Record tap history
       await client.query(
         'INSERT INTO tap_history (user_id, points_earned) VALUES ($1, $2)',
         [userId, pointsEarned]
       );
 
-      // Update streak
       await updateStreak(client, userId);
 
-      // Get new rank
       const rankResult = await client.query(
         'SELECT COUNT(*) + 1 as rank FROM users WHERE total_points > $1',
         [newTotal]
       );
 
-      // Get current streak
       const streakResult = await client.query(
         'SELECT current_streak FROM user_streaks WHERE user_id = $1',
         [userId]
@@ -165,12 +148,12 @@ router.post('/tap', verifyWallet, async (req, res) => {
       await client.query('COMMIT');
       client.release();
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           pointsEarned,
           totalPoints: newTotal,
-          newRank: parseInt(rankResult.rows[0].rank),
+          newRank: parseInt(rankResult.rows[0].rank, 10),
           streak: streakResult.rows[0]?.current_streak || 0
         }
       });
@@ -181,7 +164,7 @@ router.post('/tap', verifyWallet, async (req, res) => {
     }
   } catch (error) {
     console.error('Tap error:', error);
-    res.status(500).json({ success: false, error: 'Failed to process tap' });
+    return res.status(500).json({ success: false, error: 'Failed to process tap' });
   }
 });
 
@@ -189,21 +172,17 @@ router.post('/tap', verifyWallet, async (req, res) => {
 router.get('/balance', verifyWallet, async (req, res) => {
   try {
     const { walletAddress } = req.user!;
-
     const result = await db.query(
       'SELECT total_points FROM users WHERE wallet_address = $1',
       [walletAddress]
     );
-
-    res.json({
+    return res.json({
       success: true,
-      data: {
-        balance: result.rows[0]?.total_points || 0
-      }
+      data: { balance: result.rows[0]?.total_points || 0 }
     });
   } catch (error) {
     console.error('Balance error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch balance' });
+    return res.status(500).json({ success: false, error: 'Failed to fetch balance' });
   }
 });
 
@@ -211,7 +190,6 @@ router.get('/balance', verifyWallet, async (req, res) => {
 router.get('/streak', verifyWallet, async (req, res) => {
   try {
     const { walletAddress } = req.user!;
-
     const userResult = await db.query(
       'SELECT id FROM users WHERE wallet_address = $1',
       [walletAddress]
@@ -220,10 +198,7 @@ router.get('/streak', verifyWallet, async (req, res) => {
     if (userResult.rows.length === 0) {
       return res.json({
         success: true,
-        data: {
-          currentStreak: 0,
-          longestStreak: 0
-        }
+        data: { currentStreak: 0, longestStreak: 0 }
       });
     }
 
@@ -232,7 +207,7 @@ router.get('/streak', verifyWallet, async (req, res) => {
       [userResult.rows[0].id]
     );
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         currentStreak: streakResult.rows[0]?.current_streak || 0,
@@ -241,21 +216,19 @@ router.get('/streak', verifyWallet, async (req, res) => {
     });
   } catch (error) {
     console.error('Streak error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch streak' });
+    return res.status(500).json({ success: false, error: 'Failed to fetch streak' });
   }
 });
 
-// Helper function to update streak
+// Helper function
 async function updateStreak(client: any, userId: number) {
   const today = new Date().toISOString().split('T')[0];
-  
   const streakResult = await client.query(
     'SELECT current_streak, last_tap_date FROM user_streaks WHERE user_id = $1',
     [userId]
   );
 
   if (streakResult.rows.length === 0) {
-    // Create new streak
     await client.query(
       'INSERT INTO user_streaks (user_id, current_streak, longest_streak, last_tap_date) VALUES ($1, 1, 1, $2)',
       [userId, today]
@@ -267,15 +240,8 @@ async function updateStreak(client: any, userId: number) {
     const yesterdayStr = yesterday.toISOString().split('T')[0];
 
     let newStreak = 1;
-    
-    if (lastDate === yesterdayStr) {
-      // Consecutive day
-      newStreak = streakResult.rows[0].current_streak + 1;
-    } else if (lastDate === today) {
-      // Same day, keep streak
-      newStreak = streakResult.rows[0].current_streak;
-    }
-    // else: streak broken, reset to 1
+    if (lastDate === yesterdayStr) newStreak = streakResult.rows[0].current_streak + 1;
+    else if (lastDate === today) newStreak = streakResult.rows[0].current_streak;
 
     await client.query(
       `UPDATE user_streaks 

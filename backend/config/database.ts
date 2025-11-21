@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool, PoolClient, QueryResult } from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,7 +15,8 @@ pool.on('error', (err) => {
   process.exit(-1);
 });
 
-export const query = async (text: string, params?: any[]) => {
+// Normal query function
+export const query = async (text: string, params?: any[]): Promise<QueryResult> => {
   const start = Date.now();
   try {
     const res = await pool.query(text, params);
@@ -30,29 +31,32 @@ export const query = async (text: string, params?: any[]) => {
   }
 };
 
-export const getClient = async () => {
-  const client = await pool.connect();
-  const query = client.query.bind(client);
-  const release = client.release.bind(client);
-  
-  // Set a timeout of 5 seconds, after which we will log this client's last query
+// Extend PoolClient if you really want to track last query
+interface ExtendedClient extends PoolClient {
+  lastQuery?: [string, any[]?];
+}
+
+export const getClient = async (): Promise<ExtendedClient> => {
+  const client = (await pool.connect()) as ExtendedClient;
+  const originalQuery = client.query.bind(client);
+  const originalRelease = client.release.bind(client);
+
   const timeout = setTimeout(() => {
     console.error('A client has been checked out for more than 5 seconds!');
   }, 5000);
-  
-  // Monkey patch the query method to keep track of the last query executed
-  client.query = (...args: any[]) => {
-    client.lastQuery = args;
-    return query(...args);
+
+  client.query = (text: string, params?: any[]) => {
+    client.lastQuery = [text, params];
+    return originalQuery(text, params);
   };
-  
+
   client.release = () => {
     clearTimeout(timeout);
-    client.query = query;
-    client.release = release;
-    return release();
+    client.query = originalQuery;
+    client.release = originalRelease;
+    return originalRelease();
   };
-  
+
   return client;
 };
 
