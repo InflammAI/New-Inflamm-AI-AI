@@ -15,8 +15,23 @@
     "declarationMap": true,
     "sourceMap": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* 👇 IMPORTANT — tells TS to load your fallback declarations */
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ]
   },
-  "include": ["src/**/*", "routes/**/*", "middleware/**/*", "config/**/*"],
+
+  /* 👇 include backend source + custom type folder */
+  "include": [
+    "src/**/*",
+    "routes/**/*",
+    "middleware/**/*",
+    "config/**/*",
+    "types/**/*"
+  ],
+
   "exclude": ["node_modules", "dist"]
 }
