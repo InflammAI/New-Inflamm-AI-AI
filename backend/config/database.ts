@@ -15,7 +15,6 @@ pool.on('error', (err) => {
   process.exit(-1);
 });
 
-// Normal query function
 export const query = async (text: string, params?: any[]): Promise<QueryResult> => {
   const start = Date.now();
   try {
@@ -31,9 +30,8 @@ export const query = async (text: string, params?: any[]): Promise<QueryResult> 
   }
 };
 
-// Extend PoolClient if you really want to track last query
 interface ExtendedClient extends PoolClient {
-  lastQuery?: [string, any[]?];
+  lastQuery?: unknown[];
 }
 
 export const getClient = async (): Promise<ExtendedClient> => {
@@ -45,10 +43,11 @@ export const getClient = async (): Promise<ExtendedClient> => {
     console.error('A client has been checked out for more than 5 seconds!');
   }, 5000);
 
-  client.query = (text: string, params?: any[]) => {
-    client.lastQuery = [text, params];
-    return originalQuery(text, params);
-  };
+  // Wrap query safely without breaking overloads
+  client.query = ((...args: unknown[]) => {
+    client.lastQuery = args;
+    return originalQuery(...args);
+  }) as typeof client.query;
 
   client.release = () => {
     clearTimeout(timeout);
