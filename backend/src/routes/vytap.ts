@@ -1,17 +1,22 @@
-import express, { Request, Response } from 'express';
-import { verifyWallet, optionalAuth } from '../middleware/auth';
-import db, { ExtendedClient } from '../config/database';
+import { Router, Request, Response } from "express";
+import { authenticateToken, optionalAuth, verifyWallet } from "../middleware/auth";
+import { pool } from "../config/database";
 
-const router = express.Router();
+const router = Router();
+
+interface ExtendedClient extends any {
+  query: any;
+  release: () => void;
+}
 
 // Typed Request with optional user
 interface AuthRequest extends Request {
   user?: { walletAddress: string };
-  body: any; // allows accessing req.body without TS error
-  query: any; // allows accessing req.query
+  body: any;
+  query: any;
 }
 
-// GET /api/v1/vytap/leaderboard
+// GET /api/vytap/leaderboard
 router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response) => {
   try {
     const limit = parseInt(req.query.limit as string) || 10;
@@ -28,7 +33,7 @@ router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response)
       LIMIT $1
     `;
     
-    const topUsers = await db.query(topUsersQuery, [limit]);
+    const topUsers = await pool.query(topUsersQuery, [limit]);
 
     let userRank: number | null = null;
     let userPoints: number | null = null;
@@ -45,7 +50,7 @@ router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response)
         FROM users u
         WHERE wallet_address = $1
       `;
-      const userStats = await db.query(userStatsQuery, [walletAddress]);
+      const userStats = await pool.query(userStatsQuery, [walletAddress]);
 
       if (userStats.rows.length > 0) {
         userPoints = userStats.rows[0].total_points;
@@ -57,7 +62,7 @@ router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response)
       }
     }
 
-    const totalUsersResult = await db.query('SELECT COUNT(*) as count FROM users');
+    const totalUsersResult = await pool.query('SELECT COUNT(*) as count FROM users');
     const totalUsers = parseInt(totalUsersResult.rows[0].count, 10);
 
     return res.json({
@@ -80,13 +85,13 @@ router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response)
   }
 });
 
-// POST /api/v1/vytap/tap
+// POST /api/vytap/tap
 router.post('/tap', verifyWallet, async (req: AuthRequest, res: Response) => {
   try {
     const { walletAddress } = req.user!;
     const { timestamp } = req.body;
 
-    const lastTapResult = await db.query(
+    const lastTapResult = await pool.query(
       'SELECT last_tap_at FROM users WHERE wallet_address = $1',
       [walletAddress]
     );
@@ -105,7 +110,7 @@ router.post('/tap', verifyWallet, async (req: AuthRequest, res: Response) => {
     }
 
     const pointsEarned = 1;
-    const client = await db.getClient() as ExtendedClient;
+    const client = await pool.connect() as ExtendedClient;
 
     try {
       await client.query('BEGIN');
@@ -174,11 +179,11 @@ router.post('/tap', verifyWallet, async (req: AuthRequest, res: Response) => {
   }
 });
 
-// GET /api/v1/vytap/balance
+// GET /api/vytap/balance
 router.get('/balance', verifyWallet, async (req: AuthRequest, res: Response) => {
   try {
     const { walletAddress } = req.user!;
-    const result = await db.query(
+    const result = await pool.query(
       'SELECT total_points FROM users WHERE wallet_address = $1',
       [walletAddress]
     );
@@ -189,11 +194,11 @@ router.get('/balance', verifyWallet, async (req: AuthRequest, res: Response) => 
   }
 });
 
-// GET /api/v1/vytap/streak
+// GET /api/vytap/streak
 router.get('/streak', verifyWallet, async (req: AuthRequest, res: Response) => {
   try {
     const { walletAddress } = req.user!;
-    const userResult = await db.query(
+    const userResult = await pool.query(
       'SELECT id FROM users WHERE wallet_address = $1',
       [walletAddress]
     );
@@ -202,7 +207,7 @@ router.get('/streak', verifyWallet, async (req: AuthRequest, res: Response) => {
       return res.json({ success: true, data: { currentStreak: 0, longestStreak: 0 } });
     }
 
-    const streakResult = await db.query(
+    const streakResult = await pool.query(
       'SELECT current_streak, longest_streak FROM user_streaks WHERE user_id = $1',
       [userResult.rows[0].id]
     );
