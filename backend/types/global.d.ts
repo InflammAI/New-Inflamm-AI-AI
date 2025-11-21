@@ -1,19 +1,7 @@
-import * as express from "express";
+declare module 'pg';
+declare module 'express';
+declare module 'cors';
+declare module 'morgan';
+declare module 'bs58';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        wallet: string;
-      };
-      walletAddress?: string;
-      sessionSignature?: string;
-      sessionMessage?: string;
-      signature?: string;
-      message?: string;
-    }
-  }
-}
-
-export {};
 
