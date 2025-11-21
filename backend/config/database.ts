@@ -43,10 +43,10 @@ export const getClient = async (): Promise<ExtendedClient> => {
     console.error('A client has been checked out for more than 5 seconds!');
   }, 5000);
 
-  // ✅ fixed TS2556 using apply
-  client.query = ((...args: unknown[]) => {
+  // ✅ TS-safe query wrapper
+  client.query = ((...args: any[]) => {
     client.lastQuery = args;
-    return originalQuery.apply(client, args);
+    return originalQuery(...(args as [string, any[]?])); // cast to expected tuple
   }) as typeof client.query;
 
   client.release = () => {
