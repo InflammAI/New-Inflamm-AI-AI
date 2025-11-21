@@ -10,11 +10,11 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-pool.on('error', (err) => {
+pool.on('error', (err: Error) => {
   console.error('Unexpected error on idle client', err);
-  process.exit(-1);
 });
 
+// Normal query function
 export const query = async (text: string, params?: any[]): Promise<QueryResult> => {
   const start = Date.now();
   try {
@@ -30,10 +30,12 @@ export const query = async (text: string, params?: any[]): Promise<QueryResult> 
   }
 };
 
-interface ExtendedClient extends PoolClient {
-  lastQuery?: unknown[];
+// ✅ Export ExtendedClient interface
+export interface ExtendedClient extends PoolClient {
+  lastQuery?: [string, any[]?];
 }
 
+// Get client with query/release overrides
 export const getClient = async (): Promise<ExtendedClient> => {
   const client = (await pool.connect()) as ExtendedClient;
   const originalQuery = client.query.bind(client);
@@ -43,10 +45,10 @@ export const getClient = async (): Promise<ExtendedClient> => {
     console.error('A client has been checked out for more than 5 seconds!');
   }, 5000);
 
-  // ✅ TS-safe query wrapper
-  client.query = ((...args: any[]) => {
+  // Wrap query safely
+  client.query = ((...args: [string, any[]?]) => {
     client.lastQuery = args;
-    return originalQuery(...(args as [string, any[]?])); // cast to expected tuple
+    return originalQuery(...args);
   }) as typeof client.query;
 
   client.release = () => {

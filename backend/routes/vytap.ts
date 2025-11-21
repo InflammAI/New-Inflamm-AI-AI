@@ -1,11 +1,16 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { verifyWallet, optionalAuth } from '../middleware/auth';
-import db from '../config/database';
+import db, { ExtendedClient } from '../config/database';
 
 const router = express.Router();
 
+// Typed Request with optional user
+interface AuthRequest extends Request {
+  user?: { walletAddress: string };
+}
+
 // GET /api/v1/vytap/leaderboard
-router.get('/leaderboard', optionalAuth, async (req, res) => {
+router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response) => {
   try {
     const limit = parseInt(req.query.limit as string) || 10;
     const walletAddress = req.user?.walletAddress;
@@ -38,7 +43,6 @@ router.get('/leaderboard', optionalAuth, async (req, res) => {
         FROM users u
         WHERE wallet_address = $1
       `;
-      
       const userStats = await db.query(userStatsQuery, [walletAddress]);
 
       if (userStats.rows.length > 0) {
@@ -75,7 +79,7 @@ router.get('/leaderboard', optionalAuth, async (req, res) => {
 });
 
 // POST /api/v1/vytap/tap
-router.post('/tap', verifyWallet, async (req, res) => {
+router.post('/tap', verifyWallet, async (req: AuthRequest, res: Response) => {
   try {
     const { walletAddress } = req.user!;
     const { timestamp } = req.body;
@@ -99,8 +103,8 @@ router.post('/tap', verifyWallet, async (req, res) => {
     }
 
     const pointsEarned = 1;
-    const client = await db.getClient();
-    
+    const client = await db.getClient() as ExtendedClient;
+
     try {
       await client.query('BEGIN');
 
@@ -157,10 +161,10 @@ router.post('/tap', verifyWallet, async (req, res) => {
           streak: streakResult.rows[0]?.current_streak || 0
         }
       });
-    } catch (error) {
+    } catch (err) {
       await client.query('ROLLBACK');
       client.release();
-      throw error;
+      throw err;
     }
   } catch (error) {
     console.error('Tap error:', error);
@@ -169,17 +173,14 @@ router.post('/tap', verifyWallet, async (req, res) => {
 });
 
 // GET /api/v1/vytap/balance
-router.get('/balance', verifyWallet, async (req, res) => {
+router.get('/balance', verifyWallet, async (req: AuthRequest, res: Response) => {
   try {
     const { walletAddress } = req.user!;
     const result = await db.query(
       'SELECT total_points FROM users WHERE wallet_address = $1',
       [walletAddress]
     );
-    return res.json({
-      success: true,
-      data: { balance: result.rows[0]?.total_points || 0 }
-    });
+    return res.json({ success: true, data: { balance: result.rows[0]?.total_points || 0 } });
   } catch (error) {
     console.error('Balance error:', error);
     return res.status(500).json({ success: false, error: 'Failed to fetch balance' });
@@ -187,7 +188,7 @@ router.get('/balance', verifyWallet, async (req, res) => {
 });
 
 // GET /api/v1/vytap/streak
-router.get('/streak', verifyWallet, async (req, res) => {
+router.get('/streak', verifyWallet, async (req: AuthRequest, res: Response) => {
   try {
     const { walletAddress } = req.user!;
     const userResult = await db.query(
@@ -196,10 +197,7 @@ router.get('/streak', verifyWallet, async (req, res) => {
     );
 
     if (userResult.rows.length === 0) {
-      return res.json({
-        success: true,
-        data: { currentStreak: 0, longestStreak: 0 }
-      });
+      return res.json({ success: true, data: { currentStreak: 0, longestStreak: 0 } });
     }
 
     const streakResult = await db.query(
@@ -220,8 +218,8 @@ router.get('/streak', verifyWallet, async (req, res) => {
   }
 });
 
-// Helper function
-async function updateStreak(client: any, userId: number) {
+// Helper
+async function updateStreak(client: ExtendedClient, userId: number) {
   const today = new Date().toISOString().split('T')[0];
   const streakResult = await client.query(
     'SELECT current_streak, last_tap_date FROM user_streaks WHERE user_id = $1',

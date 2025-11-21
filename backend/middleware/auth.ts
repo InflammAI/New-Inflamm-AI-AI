@@ -13,10 +13,10 @@ declare global {
   }
 }
 
+// Wallet verification middleware
 export async function verifyWallet(req: Request, res: Response, next: NextFunction) {
   try {
     const { walletAddress, sessionSignature, sessionMessage, signature, message } = req.body;
-
     const sig = sessionSignature || signature;
     const msg = sessionMessage || message;
 
@@ -24,17 +24,18 @@ export async function verifyWallet(req: Request, res: Response, next: NextFuncti
       return res.status(401).json({ success: false, error: 'Missing authentication credentials' });
     }
 
+    // Validate wallet address format
     try {
       new PublicKey(walletAddress);
     } catch (error) {
       return res.status(401).json({ success: false, error: 'Invalid wallet address format' });
     }
 
+    // Verify signature
     try {
       const messageBytes = new TextEncoder().encode(msg);
       const signatureBytes = bs58.decode(sig);
       const publicKeyBytes = new PublicKey(walletAddress).toBytes();
-
       const verified = nacl.sign.detached.verify(messageBytes, signatureBytes, publicKeyBytes);
 
       if (!verified) {
@@ -44,6 +45,7 @@ export async function verifyWallet(req: Request, res: Response, next: NextFuncti
       return res.status(401).json({ success: false, error: 'Signature verification failed' });
     }
 
+    // Check message timestamp for normal signatures
     if (!sessionSignature && message) {
       try {
         const messageData = JSON.parse(msg);
@@ -58,6 +60,7 @@ export async function verifyWallet(req: Request, res: Response, next: NextFuncti
       }
     }
 
+    // Validate session signatures
     if (sessionSignature) {
       try {
         const messageData = JSON.parse(msg);
@@ -69,16 +72,15 @@ export async function verifyWallet(req: Request, res: Response, next: NextFuncti
       }
     }
 
-    // Attach user to request and return next
     req.user = { walletAddress };
-    return next(); // ✅ Return ensures TS sees a value
+    return next(); // ✅ Return to satisfy TS
   } catch (error) {
     console.error('Wallet verification error:', error);
-    return res.status(500).json({ success: false, error: 'Authentication failed' }); // ✅ Return here too
+    return res.status(500).json({ success: false, error: 'Authentication failed' }); // ✅ Return
   }
 }
 
-// Optional auth - doesn't block if no auth provided
+// Optional authentication (doesn't block)
 export async function optionalAuth(req: Request, res: Response, next: NextFunction) {
   const { walletAddress } = req.query;
 
@@ -86,8 +88,8 @@ export async function optionalAuth(req: Request, res: Response, next: NextFuncti
     try {
       new PublicKey(walletAddress);
       req.user = { walletAddress };
-    } catch (error) {
-      // Invalid wallet, just continue
+    } catch {
+      // Invalid wallet, ignore
     }
   }
 
