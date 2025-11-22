@@ -24,7 +24,7 @@ app.use("/api/vytap", vytapRoutes);
 
 // ---------- Health Check ----------
 app.get("/", (req: Request, res: any) => {
-  res.json({ message: "Inflamm AI API is running!" });
+  res.json({ message: "Inflamm AI API is running!", timestamp: new Date().toISOString() });
 });
 
 // ---------- Error Handler ----------
