@@ -162,7 +162,7 @@ const HeroSection = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            Launch App
+            Launch App {/* Updated to www.inflammai.com */}
           </motion.a>
           <motion.a 
             href="https://t.me/InflammAI"
