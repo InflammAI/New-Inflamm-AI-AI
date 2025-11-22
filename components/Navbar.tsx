@@ -40,7 +40,7 @@ const Navbar = () => {
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           <motion.a 
-            href="https://app.inflammai.com/inflamm-ai"
+            href="https://www.inflammai.com/inflamm-ai"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full font-medium hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg"

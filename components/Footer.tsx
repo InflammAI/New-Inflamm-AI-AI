@@ -94,7 +94,7 @@ const Footer = () => {
             <h4 className="text-lg font-bold mb-4">Navigation</h4>
             <ul className="space-y-3">
               <li>
-                <a href="https://app.inflammai.com/inflamm-ai" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">
+                <a href="https://www.inflammai.com/inflamm-ai" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">
                   Launch App
                 </a>
               </li>

@@ -155,7 +155,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
         >
           <motion.a 
-            href="https://app.inflammai.com/inflamm-ai"
+            href="https://www.inflammai.com/inflamm-ai"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-full text-lg md:text-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all duration-300 hover:scale-105 hover:shadow-lg w-full sm:w-auto max-w-xs sm:max-w-none inline-block text-center"
