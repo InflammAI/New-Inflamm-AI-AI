@@ -1,5 +1,18 @@
 import dotenv from 'dotenv';
-import { Pool, PoolClient, QueryResult } from 'pg';
+import { Pool } from 'pg';
+import type { Pool as PoolType } from 'pg';
+
+interface QueryResult<T = any> {
+  rows: T[];
+  rowCount: number | null;
+  command: string;
+  fields: any[];
+}
+
+interface PoolClient {
+  query: (text: string, params?: any[]) => Promise<QueryResult>;
+  release: () => void;
+}
 
 // Load environment variables early
 dotenv.config();
@@ -40,7 +53,7 @@ export const query = async (
 };
 
 /**
- * Properly extend PoolClient so TS knows query and elease exist and have proper types.
+ * Properly extend PoolClient so TS knows query and release exist and have proper types.
  */
 export interface ExtendedClient extends PoolClient {
   lastQuery?: [string, any[]?];
@@ -84,8 +97,4 @@ export const getClient = async (): Promise<ExtendedClient> => {
   return client;
 };
 
-export default {
-  query,
-  getClient,
-  pool,
-};
+export { pool };

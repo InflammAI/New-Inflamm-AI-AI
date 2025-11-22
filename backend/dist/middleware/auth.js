@@ -10,7 +10,8 @@ const bs58_1 = __importDefault(require("bs58"));
 const web3_js_1 = require("@solana/web3.js");
 async function verifyWallet(req, res, next) {
     try {
-        const { walletAddress, sessionSignature, sessionMessage, signature, message } = req.body;
+        const body = req.body;
+        const { walletAddress, sessionSignature, sessionMessage, signature, message } = body ?? {};
         const sig = sessionSignature || signature;
         const msg = sessionMessage || message;
         if (!walletAddress || !sig || !msg) {
@@ -19,7 +20,7 @@ async function verifyWallet(req, res, next) {
         try {
             new web3_js_1.PublicKey(walletAddress);
         }
-        catch (error) {
+        catch {
             return res.status(401).json({ success: false, error: 'Invalid wallet address format' });
         }
         try {
@@ -31,7 +32,7 @@ async function verifyWallet(req, res, next) {
                 return res.status(401).json({ success: false, error: 'Invalid signature' });
             }
         }
-        catch (error) {
+        catch {
             return res.status(401).json({ success: false, error: 'Signature verification failed' });
         }
         if (!sessionSignature && message) {
@@ -43,7 +44,7 @@ async function verifyWallet(req, res, next) {
                     return res.status(401).json({ success: false, error: 'Message expired or invalid timestamp' });
                 }
             }
-            catch (error) {
+            catch {
                 return res.status(401).json({ success: false, error: 'Invalid message format' });
             }
         }
@@ -54,31 +55,29 @@ async function verifyWallet(req, res, next) {
                     return res.status(401).json({ success: false, error: 'Invalid session signature' });
                 }
             }
-            catch (error) {
+            catch {
                 return res.status(401).json({ success: false, error: 'Invalid session message format' });
             }
         }
-        // Attach user to request and return next
         req.user = { walletAddress };
-        return next(); // ✅ Return ensures TS sees a value
+        return next();
     }
     catch (error) {
         console.error('Wallet verification error:', error);
-        return res.status(500).json({ success: false, error: 'Authentication failed' }); // ✅ Return here too
+        return res.status(500).json({ success: false, error: 'Authentication failed' });
     }
 }
-// Optional auth - doesn't block if no auth provided
 async function optionalAuth(req, res, next) {
-    const { walletAddress } = req.query;
-    if (walletAddress && typeof walletAddress === 'string') {
+    const query = req.query;
+    const walletAddress = typeof query.walletAddress === 'string' ? query.walletAddress : undefined;
+    if (walletAddress) {
         try {
             new web3_js_1.PublicKey(walletAddress);
             req.user = { walletAddress };
         }
-        catch (error) {
-            // Invalid wallet, just continue
+        catch {
+            // ignore invalid
         }
     }
-    return next(); // ✅ Ensure return
+    return next();
 }
-//# sourceMappingURL=auth.js.map

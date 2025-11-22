@@ -1,4 +1,6 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
+import type { Request, Response } from "express";
+type NextFunction = (err?: any) => void;
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -21,12 +23,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/vytap", vytapRoutes);
 
 // ---------- Health Check ----------
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: any) => {
   res.json({ message: "Inflamm AI API is running!" });
 });
 
 // ---------- Error Handler ----------
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: any, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ error: "Something went wrong!" });
 });

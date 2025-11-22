@@ -1,13 +1,11 @@
-import { Router, Request, Response } from "express";
-import { authenticateToken, optionalAuth, verifyWallet } from "../middleware/auth";
+import { Router } from "express";
+import type { Request, Response } from "express";
+import { optionalAuth, verifyWallet } from "../middleware/auth";
 import { pool } from "../config/database";
+import type { ExtendedClient } from "../config/database";
 
 const router = Router();
 
-interface ExtendedClient extends any {
-  query: any;
-  release: () => void;
-}
 
 // Typed Request with optional user
 interface AuthRequest extends Request {
@@ -17,7 +15,7 @@ interface AuthRequest extends Request {
 }
 
 // GET /api/vytap/leaderboard
-router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response) => {
+router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: any) => {
   try {
     const limit = parseInt(req.query.limit as string) || 10;
     const walletAddress = req.user?.walletAddress;
@@ -86,7 +84,7 @@ router.get('/leaderboard', optionalAuth, async (req: AuthRequest, res: Response)
 });
 
 // POST /api/vytap/tap
-router.post('/tap', verifyWallet, async (req: AuthRequest, res: Response) => {
+router.post('/tap', verifyWallet, async (req: AuthRequest, res: any) => {
   try {
     const { walletAddress } = req.user!;
     const { timestamp } = req.body;
@@ -180,7 +178,7 @@ router.post('/tap', verifyWallet, async (req: AuthRequest, res: Response) => {
 });
 
 // GET /api/vytap/balance
-router.get('/balance', verifyWallet, async (req: AuthRequest, res: Response) => {
+router.get('/balance', verifyWallet, async (req: AuthRequest, res: any) => {
   try {
     const { walletAddress } = req.user!;
     const result = await pool.query(
@@ -195,7 +193,7 @@ router.get('/balance', verifyWallet, async (req: AuthRequest, res: Response) => 
 });
 
 // GET /api/vytap/streak
-router.get('/streak', verifyWallet, async (req: AuthRequest, res: Response) => {
+router.get('/streak', verifyWallet, async (req: AuthRequest, res: any) => {
   try {
     const { walletAddress } = req.user!;
     const userResult = await pool.query(

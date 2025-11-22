@@ -1,13 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+const express_1 = require("express");
 const auth_1 = require("../middleware/auth");
-const database_1 = __importDefault(require("../config/database"));
-const router = express_1.default.Router();
-// GET /api/v1/vytap/leaderboard
+const database_1 = require("../config/database");
+const router = (0, express_1.Router)();
+// GET /api/vytap/leaderboard
 router.get('/leaderboard', auth_1.optionalAuth, async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
@@ -22,7 +19,7 @@ router.get('/leaderboard', auth_1.optionalAuth, async (req, res) => {
       ORDER BY total_points DESC
       LIMIT $1
     `;
-        const topUsers = await database_1.default.query(topUsersQuery, [limit]);
+        const topUsers = await database_1.pool.query(topUsersQuery, [limit]);
         let userRank = null;
         let userPoints = null;
         if (walletAddress) {
@@ -37,7 +34,7 @@ router.get('/leaderboard', auth_1.optionalAuth, async (req, res) => {
         FROM users u
         WHERE wallet_address = $1
       `;
-            const userStats = await database_1.default.query(userStatsQuery, [walletAddress]);
+            const userStats = await database_1.pool.query(userStatsQuery, [walletAddress]);
             if (userStats.rows.length > 0) {
                 userPoints = userStats.rows[0].total_points;
                 userRank = parseInt(userStats.rows[0].rank, 10);
@@ -47,7 +44,7 @@ router.get('/leaderboard', auth_1.optionalAuth, async (req, res) => {
                 }));
             }
         }
-        const totalUsersResult = await database_1.default.query('SELECT COUNT(*) as count FROM users');
+        const totalUsersResult = await database_1.pool.query('SELECT COUNT(*) as count FROM users');
         const totalUsers = parseInt(totalUsersResult.rows[0].count, 10);
         return res.json({
             success: true,
@@ -69,12 +66,12 @@ router.get('/leaderboard', auth_1.optionalAuth, async (req, res) => {
         return res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
     }
 });
-// POST /api/v1/vytap/tap
+// POST /api/vytap/tap
 router.post('/tap', auth_1.verifyWallet, async (req, res) => {
     try {
         const { walletAddress } = req.user;
         const { timestamp } = req.body;
-        const lastTapResult = await database_1.default.query('SELECT last_tap_at FROM users WHERE wallet_address = $1', [walletAddress]);
+        const lastTapResult = await database_1.pool.query('SELECT last_tap_at FROM users WHERE wallet_address = $1', [walletAddress]);
         if (lastTapResult.rows.length > 0 && lastTapResult.rows[0].last_tap_at) {
             const lastTap = new Date(lastTapResult.rows[0].last_tap_at).getTime();
             const now = Date.now();
@@ -88,7 +85,7 @@ router.post('/tap', auth_1.verifyWallet, async (req, res) => {
             }
         }
         const pointsEarned = 1;
-        const client = await database_1.default.getClient();
+        const client = await database_1.pool.connect();
         try {
             await client.query('BEGIN');
             let userResult = await client.query('SELECT id, total_points FROM users WHERE wallet_address = $1', [walletAddress]);
@@ -120,10 +117,10 @@ router.post('/tap', auth_1.verifyWallet, async (req, res) => {
                 }
             });
         }
-        catch (error) {
+        catch (err) {
             await client.query('ROLLBACK');
             client.release();
-            throw error;
+            throw err;
         }
     }
     catch (error) {
@@ -131,33 +128,27 @@ router.post('/tap', auth_1.verifyWallet, async (req, res) => {
         return res.status(500).json({ success: false, error: 'Failed to process tap' });
     }
 });
-// GET /api/v1/vytap/balance
+// GET /api/vytap/balance
 router.get('/balance', auth_1.verifyWallet, async (req, res) => {
     try {
         const { walletAddress } = req.user;
-        const result = await database_1.default.query('SELECT total_points FROM users WHERE wallet_address = $1', [walletAddress]);
-        return res.json({
-            success: true,
-            data: { balance: result.rows[0]?.total_points || 0 }
-        });
+        const result = await database_1.pool.query('SELECT total_points FROM users WHERE wallet_address = $1', [walletAddress]);
+        return res.json({ success: true, data: { balance: result.rows[0]?.total_points || 0 } });
     }
     catch (error) {
         console.error('Balance error:', error);
         return res.status(500).json({ success: false, error: 'Failed to fetch balance' });
     }
 });
-// GET /api/v1/vytap/streak
+// GET /api/vytap/streak
 router.get('/streak', auth_1.verifyWallet, async (req, res) => {
     try {
         const { walletAddress } = req.user;
-        const userResult = await database_1.default.query('SELECT id FROM users WHERE wallet_address = $1', [walletAddress]);
+        const userResult = await database_1.pool.query('SELECT id FROM users WHERE wallet_address = $1', [walletAddress]);
         if (userResult.rows.length === 0) {
-            return res.json({
-                success: true,
-                data: { currentStreak: 0, longestStreak: 0 }
-            });
+            return res.json({ success: true, data: { currentStreak: 0, longestStreak: 0 } });
         }
-        const streakResult = await database_1.default.query('SELECT current_streak, longest_streak FROM user_streaks WHERE user_id = $1', [userResult.rows[0].id]);
+        const streakResult = await database_1.pool.query('SELECT current_streak, longest_streak FROM user_streaks WHERE user_id = $1', [userResult.rows[0].id]);
         return res.json({
             success: true,
             data: {
@@ -171,7 +162,7 @@ router.get('/streak', auth_1.verifyWallet, async (req, res) => {
         return res.status(500).json({ success: false, error: 'Failed to fetch streak' });
     }
 });
-// Helper function
+// Helper
 async function updateStreak(client, userId) {
     const today = new Date().toISOString().split('T')[0];
     const streakResult = await client.query('SELECT current_streak, last_tap_date FROM user_streaks WHERE user_id = $1', [userId]);
@@ -196,4 +187,3 @@ async function updateStreak(client, userId) {
     }
 }
 exports.default = router;
-//# sourceMappingURL=vytap.js.map

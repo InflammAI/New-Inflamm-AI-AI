@@ -1,19 +1,18 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
+type NextFunction = (err?: any) => void;
+
+interface AuthRequest extends Request {
+  user?: {
+    walletAddress: string;
+  };
+  query: any;
+  body: any;
+}
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
 import { PublicKey } from '@solana/web3.js';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        walletAddress: string;
-      };
-    }
-  }
-}
-
-export async function verifyWallet(req: Request, res: Response, next: NextFunction) {
+export async function verifyWallet(req: AuthRequest, res: any, next: NextFunction) {
   try {
     const body = req.body as Record<string, any> | undefined;
     const { walletAddress, sessionSignature, sessionMessage, signature, message } = body ?? {};
@@ -76,7 +75,7 @@ export async function verifyWallet(req: Request, res: Response, next: NextFuncti
   }
 }
 
-export async function optionalAuth(req: Request, res: Response, next: NextFunction) {
+export async function optionalAuth(req: AuthRequest, res: any, next: NextFunction) {
   const query = req.query as Record<string, any>;
   const walletAddress = typeof query.walletAddress === 'string' ? query.walletAddress : undefined;
 
