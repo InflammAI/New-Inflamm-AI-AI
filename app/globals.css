@@ -74,3 +74,26 @@ body {
 .horizontal-scroll > * {
   scroll-snap-align: start;
 }
+
+/* Horizontal scroll animation for partners */
+@keyframes scroll-x {
+  0% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll-x {
+  animation: scroll-x 20s linear infinite;
+}
+
+.animate-scroll-x:hover {
+  animation-play-state: paused;
+}
+
+/* Ensure smooth animation */
+.animate-scroll-x > * {
+  flex-shrink: 0;
+}
