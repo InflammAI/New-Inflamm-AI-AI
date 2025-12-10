@@ -7,7 +7,7 @@ const CoreFeaturesSection = () => {
   return (
     <section className="w-full py-20 md:py-32 bg-white px-6">
       <div className="max-w-6xl mx-auto">
-        {/* Section Title */}
+        {/* Section Title - Updated to What We Offer */}
         <motion.h2 
           className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
