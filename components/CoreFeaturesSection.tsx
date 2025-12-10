@@ -15,7 +15,7 @@ const CoreFeaturesSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          Core Features
+          What We Offer
         </motion.h2>
 
         {/* Feature Cards Grid - Top Row */}
