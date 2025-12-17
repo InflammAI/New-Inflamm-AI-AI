@@ -165,14 +165,14 @@ const HeroSection = () => {
             Launch App {/* Updated to www.inflammai.com */}
           </motion.a>
           <motion.a 
-            href="https://t.me/InflammAI"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdt14MkbLddfebAPUSH5I5jBVSnQz3nSeiv9B7w6Un-2gROKQ/viewform?usp=sharing&ouid=110272847807260212496"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-transparent border-2 border-dark-gray text-dark-gray px-8 md:px-10 py-3 md:py-4 rounded-full text-lg md:text-xl font-semibold hover:bg-dark-gray hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg w-full sm:w-auto max-w-xs sm:max-w-none inline-block text-center"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            Join Community
+            Join Waitlist
           </motion.a>
         </motion.div>
       </div>
