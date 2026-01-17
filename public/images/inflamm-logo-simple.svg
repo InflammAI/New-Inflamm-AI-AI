@@ -1,0 +1,44 @@
+<svg width="512" height="512" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Person Head - simple circle -->
+  <circle cx="20" cy="18" r="10" fill="#FF8C00"/>
+  
+  <!-- Person Body - simple rounded rectangle -->
+  <rect x="10" y="30" width="20" height="28" rx="10" ry="10" fill="#FF8C00"/>
+  
+  <!-- Heart - simple white heart shape -->
+  <path 
+    d="M 20 40 
+       L 15 35 
+       Q 12 32 12 29 
+       Q 12 26 14.5 26 
+       Q 17 26 20 29 
+       Q 23 26 25.5 26 
+       Q 28 26 28 29 
+       Q 28 32 25 35 
+       Z" 
+    fill="#FFFFFF"
+  />
+  
+  <!-- Signal waves - 3 clean arcs -->
+  <path 
+    d="M 38 14 Q 44 18 44 24 Q 44 30 38 34" 
+    stroke="#FF8C00"
+    stroke-width="4" 
+    fill="none" 
+    stroke-linecap="round"
+  />
+  <path 
+    d="M 46 10 Q 54 16 54 24 Q 54 32 46 38" 
+    stroke="#FF8C00"
+    stroke-width="3.5" 
+    fill="none" 
+    stroke-linecap="round"
+  />
+  <path 
+    d="M 54 6 Q 64 14 64 24 Q 64 34 54 42" 
+    stroke="#FF8C00"
+    stroke-width="3" 
+    fill="none" 
+    stroke-linecap="round"
+  />
+</svg>
