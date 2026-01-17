@@ -1,0 +1,56 @@
+:root {
+  /* Accent colors */
+  --accent-orange: #FF8A00;
+  --accent-yellow: #FFD400;
+  
+  /* Surface colors */
+  --surface: #0F1720;
+  --bg: #0B0F14;
+  --muted: #98A1AD;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B8C1CC;
+  
+  /* Glow effects */
+  --glow-orange: rgba(255, 180, 122, 0.12);
+  --glow-yellow: rgba(255, 241, 154, 0.10);
+  
+  /* Light theme variables */
+.light-theme {
+  --surface: #ffffff;
+  --bg: #f8fafc;
+  --surface-secondary: #f1f5f9;
+  --surface-elevated: #ffffff;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --muted: #94a3b8;
+  --accent-orange: #f97316;
+  --accent-yellow: #eab308;
+  --accent-cyan: #06b6d4;
+  --glow-orange: rgba(251, 146, 60, 0.15);
+  --glow-yellow: rgba(234, 179, 8, 0.12);
+}
+  
+  /* Border radius */
+  --radius-xl: 14px;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 6px;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  
+  /* Touch targets */
+  --touch-target-min: 44px;
+}

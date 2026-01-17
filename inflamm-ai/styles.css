@@ -1,0 +1,399 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F5EE;
+    color: #2D3748;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header styles */
+.header {
+    padding: 24px 0;
+    background-color: #F8F5EE;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.infinity-symbol {
+    display: flex;
+    align-items: center;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2D3748;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #2D3748;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #4A5568;
+}
+
+.cta-button {
+    background-color: #2D3748;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #4A5568;
+    transform: translateY(-2px);
+}
+
+/* Main content styles */
+.main-content {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    padding: 80px 0 100px 0;
+}
+
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 32px;
+    width: 100%;
+}
+
+.hero-content {
+    flex: 0 1 auto;
+    max-width: 1100px;
+}
+
+.hero-title {
+    font-size: 104px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    color: #2D3748;
+}
+
+.highlight {
+    display: block;
+}
+
+.hero-description {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.8;
+    margin: 8px auto 56px auto;
+    color: #2D3748;
+    max-width: 980px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.primary-button {
+    background-color: #2D3748;
+    color: white;
+    border: none;
+    padding: 22px 42px;
+    border-radius: 56px;
+    font-weight: 700;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.primary-button:hover {
+    background-color: #4A5568;
+    transform: translateY(-2px);
+}
+
+.secondary-button {
+    background-color: transparent;
+    color: #2D3748;
+    border: 3px solid #2D3748;
+    padding: 20px 40px;
+    border-radius: 56px;
+    font-weight: 700;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.secondary-button:hover {
+    background-color: #2D3748;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Hero illustration styles */
+.hero-illustration {
+    display: none; /* Hide to match reference layout */
+}
+
+.character-circle {
+    width: 200px;
+    height: 200px;
+    background-color: #8BC34A;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eyes {
+    position: relative;
+    width: 80px;
+    height: 20px;
+    margin-top: -20px;
+}
+
+.eye {
+    width: 16px;
+    height: 16px;
+    background-color: #5C3D2E;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.left-eye {
+    left: 12px;
+}
+
+.right-eye {
+    right: 12px;
+}
+
+.eyebrows {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 20px;
+}
+
+.eyebrow {
+    position: absolute;
+    width: 12px;
+    height: 3px;
+    background-color: #5C3D2E;
+    border-radius: 2px;
+}
+
+.left-eyebrow {
+    left: 25px;
+    top: 5px;
+}
+
+.right-eyebrow {
+    right: 25px;
+    top: 5px;
+}
+
+.center-eyebrow {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    width: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .header .container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .navigation {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 28px;
+    }
+    
+    .hero-title {
+        font-size: 64px;
+    }
+    
+    .hero-description {
+        font-size: 20px;
+        margin-bottom: 40px;
+        max-width: 700px;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .character-circle { display: none; }
+    
+    .eyes {
+        width: 60px;
+        height: 15px;
+        margin-top: -15px;
+    }
+    
+    .eye {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .left-eye {
+        left: 8px;
+    }
+    
+    .right-eye {
+        right: 8px;
+    }
+    
+    .eyebrows {
+        width: 80px;
+        height: 15px;
+        top: -25px;
+    }
+    
+    .eyebrow {
+        width: 10px;
+        height: 2px;
+    }
+    
+    .left-eyebrow {
+        left: 20px;
+        top: 4px;
+    }
+    
+    .right-eyebrow {
+        right: 20px;
+        top: 4px;
+    }
+    
+    .center-eyebrow {
+        width: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 16px;
+    }
+    
+    .hero-title {
+        font-size: 42px;
+    }
+    
+    .hero-description {
+        font-size: 18px;
+        line-height: 1.7;
+        margin-bottom: 32px;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .primary-button,
+    .secondary-button {
+        width: 100%;
+        max-width: 320px;
+    }
+    
+    .character-circle {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .eyes {
+        width: 50px;
+        height: 12px;
+        margin-top: -12px;
+    }
+    
+    .eye {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .left-eye {
+        left: 6px;
+    }
+    
+    .right-eye {
+        right: 6px;
+    }
+    
+    .eyebrows {
+        width: 60px;
+        height: 12px;
+        top: -20px;
+    }
+    
+    .eyebrow {
+        width: 8px;
+        height: 2px;
+    }
+    
+    .left-eyebrow {
+        left: 15px;
+        top: 3px;
+    }
+    
+    .right-eyebrow {
+        right: 15px;
+        top: 3px;
+    }
+    
+    .center-eyebrow {
+        width: 5px;
+    }
+}

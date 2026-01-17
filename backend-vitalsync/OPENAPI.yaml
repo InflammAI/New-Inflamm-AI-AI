@@ -1,0 +1,707 @@
+openapi: 3.0.0
+info:
+  title: Vital Sync Backend API
+  description: Complete health tracking and device syncing platform API
+  version: 1.0.0
+  contact:
+    name: Vital Sync Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:5000/api
+    description: Development server
+  - url: https://api.vitalsync.app/api
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication and session management
+  - name: Vitals
+    description: Vital signs recording and tracking
+  - name: Devices
+    description: Wearable device integration
+  - name: Recommendations
+    description: AI-powered health recommendations
+  - name: Notifications
+    description: User notifications and alerts
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+        gender:
+          type: string
+        height_cm:
+          type: number
+        weight_kg:
+          type: number
+        role:
+          type: string
+          enum: [user, admin, premium]
+        created_at:
+          type: string
+          format: date-time
+
+    Vital:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        heart_rate:
+          type: integer
+          minimum: 30
+          maximum: 200
+        heart_rate_variability:
+          type: number
+        blood_oxygen_percentage:
+          type: number
+          minimum: 70
+          maximum: 100
+        respiratory_rate:
+          type: integer
+        body_temperature:
+          type: number
+        steps:
+          type: integer
+        calories_burned:
+          type: number
+        active_minutes:
+          type: integer
+        sleep_duration_minutes:
+          type: integer
+        sleep_quality_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        stress_level:
+          type: string
+          enum: [low, medium, high]
+        energy_level:
+          type: integer
+          minimum: 0
+          maximum: 100
+        recorded_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    Device:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        device_type:
+          type: string
+          enum: [fitbit, oura, garmin, apple_watch, manual]
+        device_name:
+          type: string
+        connection_status:
+          type: string
+          enum: [connected, disconnected, error]
+        last_synced:
+          type: string
+          format: date-time
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    Recommendation:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        recommendation_type:
+          type: string
+          enum: [wellness, exercise, nutrition, sleep, stress]
+        title:
+          type: string
+        content:
+          type: string
+        confidence_score:
+          type: number
+          minimum: 0
+          maximum: 1
+        is_acted_upon:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    Notification:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        notification_type:
+          type: string
+        title:
+          type: string
+        message:
+          type: string
+        is_read:
+          type: boolean
+        delivery_method:
+          type: string
+          enum: [in_app, email, push, sms]
+        created_at:
+          type: string
+          format: date-time
+
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                  pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])'
+                  description: Must contain uppercase, lowercase, number, and special character
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email already registered
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  accessToken:
+                    type: string
+        '401':
+          description: Invalid refresh token
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logged out successfully
+
+  /auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+
+  /vitals:
+    post:
+      tags:
+        - Vitals
+      summary: Record vital signs
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                heart_rate:
+                  type: integer
+                blood_oxygen_percentage:
+                  type: number
+                respiratory_rate:
+                  type: integer
+                body_temperature:
+                  type: number
+                steps:
+                  type: integer
+                active_minutes:
+                  type: integer
+                sleep_duration_minutes:
+                  type: integer
+                sleep_quality_score:
+                  type: number
+                stress_level:
+                  type: string
+                energy_level:
+                  type: integer
+                recorded_at:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Vital recorded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  vital:
+                    $ref: '#/components/schemas/Vital'
+
+  /vitals/latest:
+    get:
+      tags:
+        - Vitals
+      summary: Get latest vital signs
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Latest vital signs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vital'
+        '404':
+          description: No vital signs recorded yet
+
+  /vitals/history:
+    get:
+      tags:
+        - Vitals
+      summary: Get vitals history with pagination
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 30
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Vitals history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Vital'
+                  pagination:
+                    type: object
+
+  /vitals/stats:
+    get:
+      tags:
+        - Vitals
+      summary: Get vitals statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Vitals statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avg_heart_rate:
+                    type: number
+                  max_heart_rate:
+                    type: integer
+                  min_heart_rate:
+                    type: integer
+                  avg_blood_oxygen:
+                    type: number
+                  total_steps:
+                    type: integer
+
+  /devices/connect:
+    post:
+      tags:
+        - Devices
+      summary: Connect wearable device
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - device_type
+              properties:
+                device_type:
+                  type: string
+                  enum: [fitbit, oura, garmin, apple_watch, manual]
+                device_name:
+                  type: string
+                oauth_token:
+                  type: string
+                oauth_refresh_token:
+                  type: string
+                external_device_id:
+                  type: string
+      responses:
+        '201':
+          description: Device connected
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  device:
+                    $ref: '#/components/schemas/Device'
+
+  /devices:
+    get:
+      tags:
+        - Devices
+      summary: Get connected devices
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Connected devices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  devices:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+                  count:
+                    type: integer
+
+  /devices/{deviceId}/sync:
+    post:
+      tags:
+        - Devices
+      summary: Sync device data
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Data synced successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  synced_vitals_count:
+                    type: integer
+
+  /recommendations/generate:
+    post:
+      tags:
+        - Recommendations
+      summary: Generate AI recommendations
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vitals:
+                  type: object
+      responses:
+        '201':
+          description: Recommendations generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  recommendations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recommendation'
+
+  /recommendations:
+    get:
+      tags:
+        - Recommendations
+      summary: Get user recommendations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: User recommendations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recommendations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recommendation'
+                  pagination:
+                    type: object
+
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Get user notifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: unread
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: User notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+                  pagination:
+                    type: object
+
+  /notifications/unread/count:
+    get:
+      tags:
+        - Notifications
+      summary: Get unread notification count
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Unread count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unread_count:
+                    type: integer
+
+  /notifications/{notificationId}/read:
+    put:
+      tags:
+        - Notifications
+      summary: Mark notification as read
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: notificationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Notification marked as read

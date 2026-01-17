@@ -1,0 +1,27 @@
+<svg width="800" height="800" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Quantum circuit pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 138, 0, 0.1)" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  
+  <rect width="800" height="800" fill="url(#grid)"/>
+  
+  <!-- Circuit lines -->
+  <path d="M100 100 L300 100 L300 200 L500 200" stroke="rgba(255, 138, 0, 0.15)" stroke-width="2" fill="none"/>
+  <path d="M200 300 L400 300 L400 450 L600 450" stroke="rgba(255, 212, 0, 0.12)" stroke-width="2" fill="none"/>
+  <path d="M150 500 L250 500 L250 650" stroke="rgba(255, 138, 0, 0.1)" stroke-width="2" fill="none"/>
+  <path d="M500 100 L700 100 L700 300" stroke="rgba(255, 212, 0, 0.08)" stroke-width="2" fill="none"/>
+  <path d="M100 600 L300 600 L300 700 L500 700" stroke="rgba(255, 138, 0, 0.12)" stroke-width="2" fill="none"/>
+  
+  <!-- Circuit nodes -->
+  <circle cx="300" cy="100" r="4" fill="rgba(255, 138, 0, 0.3)"/>
+  <circle cx="300" cy="200" r="4" fill="rgba(255, 212, 0, 0.25)"/>
+  <circle cx="400" cy="300" r="4" fill="rgba(255, 138, 0, 0.2)"/>
+  <circle cx="400" cy="450" r="4" fill="rgba(255, 212, 0, 0.2)"/>
+  <circle cx="250" cy="500" r="4" fill="rgba(255, 138, 0, 0.25)"/>
+  <circle cx="700" cy="100" r="4" fill="rgba(255, 212, 0, 0.2)"/>
+  <circle cx="300" cy="600" r="4" fill="rgba(255, 138, 0, 0.2)"/>
+  <circle cx="300" cy="700" r="4" fill="rgba(255, 212, 0, 0.25)"/>
+</svg>
