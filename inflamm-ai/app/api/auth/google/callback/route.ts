@@ -21,13 +21,13 @@ export async function GET(request: NextRequest) {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams({
-          client_id: process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-          client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          code: code,
-          grant_type: 'authorization_code',
-          redirect_uri: process.env.GOOGLE_REDIRECT_URI || process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
-        }),
+        body: new URLSearchParams([
+          ['client_id', process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''],
+          ['client_secret', process.env.GOOGLE_CLIENT_SECRET || ''],
+          ['code', code],
+          ['grant_type', 'authorization_code'],
+          ['redirect_uri', process.env.GOOGLE_REDIRECT_URI || process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || ''],
+        ]),
       });
 
       if (!tokenResponse.ok) {
