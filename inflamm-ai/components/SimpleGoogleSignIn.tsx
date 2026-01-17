@@ -33,7 +33,7 @@ export function SimpleGoogleSignIn({
       // Direct OAuth 2.0 flow with callback page
       const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       authUrl.searchParams.set('client_id', clientId);
-      authUrl.searchParams.set('redirect_uri', redirectUri ?? 'http://localhost:3000/inflamm-ai');
+      authUrl.searchParams.set('redirect_uri', redirectUri ?? 'https://www.inflammai.com/inflamm-ai');
       authUrl.searchParams.set('response_type', 'token');
       authUrl.searchParams.set('scope', 'openid email profile');
       authUrl.searchParams.set('state', Math.random().toString(36).substring(7));
