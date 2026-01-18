@@ -93,12 +93,6 @@ export function GoogleAuthProvider({ children }: { children: ReactNode }) {
     // Clear any URL hash or search params that might contain auth data
     if (typeof window !== 'undefined') {
       window.history.replaceState(null, '', window.location.pathname);
-      
-      // Try to revoke any existing Google tokens
-      const service = getGoogleOAuthService();
-      if (service) {
-        service.signOut();
-      }
     }
   };
 

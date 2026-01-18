@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { AuthSection } from '@/components/VytalSync/AuthSection';
-import { VitalsRecorder } from '@/components/VytalSync/VitalsRecorder';
-import { VitalsChart } from '@/components/VytalSync/VitalsChart';
-import { DeviceConnect } from '@/components/VytalSync/DeviceConnect';
-import { RecommendationCard } from '@/components/VytalSync/RecommendationCard';
+import { AuthSection } from '@/components/vitalsync/AuthSection';
+import { VitalsRecorder } from '@/components/vitalsync/VitalsRecorder';
+import { VitalsChart } from '@/components/vitalsync/VitalsChart';
+import { DeviceConnect } from '@/components/vitalsync/DeviceConnect';
+import { RecommendationCard } from '@/components/vitalsync/RecommendationCard';
 import { Heart, Activity, Database, Shield, TrendingUp, Users, Clock, BarChart3, Bell, Zap } from 'lucide-react';
 
 export const IntegratedHealthDashboard: React.FC = () => {
@@ -116,7 +116,7 @@ export const IntegratedHealthDashboard: React.FC = () => {
             </div>
             <p className="text-gray-600">Health Tracking & Device Management</p>
           </div>
-          <AuthSection onLogin={handleLogin} />
+          <AuthSection />
         </div>
       </div>
     );
@@ -233,12 +233,7 @@ export const IntegratedHealthDashboard: React.FC = () => {
                   <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Recommendations</h2>
                   <div className="space-y-4">
                     {recommendations.slice(0, 3).map((rec) => (
-                      <RecommendationCard
-                        key={rec.id}
-                        recommendation={rec}
-                        apiUrl={API_URL}
-                        accessToken={token}
-                      />
+                      <RecommendationCard />
                     ))}
                   </div>
                 </div>
@@ -251,17 +246,10 @@ export const IntegratedHealthDashboard: React.FC = () => {
           <div className="space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <VitalsRecorder
-                  apiUrl={API_URL}
-                  accessToken={token}
-                  onSuccess={refreshData}
-                />
+                <VitalsRecorder />
               </div>
               <div>
-                <VitalsChart
-                  apiUrl={API_URL}
-                  accessToken={token}
-                />
+                <VitalsChart />
               </div>
             </div>
           </div>
@@ -269,11 +257,7 @@ export const IntegratedHealthDashboard: React.FC = () => {
 
         {activeTab === 'devices' && (
           <div>
-            <DeviceConnect
-              apiUrl={API_URL}
-              accessToken={token}
-              onSuccess={refreshData}
-            />
+            <DeviceConnect />
           </div>
         )}
 
@@ -284,7 +268,7 @@ export const IntegratedHealthDashboard: React.FC = () => {
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-lg font-medium text-gray-900">AI Recommendations</h2>
                   <button
-                    onClick={() => fetchRecommendations(token)}
+                    onClick={() => token && fetchRecommendations(token)}
                     className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700"
                   >
                     Refresh
@@ -299,12 +283,7 @@ export const IntegratedHealthDashboard: React.FC = () => {
                 ) : (
                   <div className="space-y-4">
                     {recommendations.map((rec) => (
-                      <RecommendationCard
-                        key={rec.id}
-                        recommendation={rec}
-                        apiUrl={API_URL}
-                        accessToken={token}
-                      />
+                      <RecommendationCard key={rec.id} />
                     ))}
                   </div>
                 )}
