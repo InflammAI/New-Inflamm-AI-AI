@@ -122,7 +122,7 @@ const Footer = () => {
         <div className="bg-gradient-to-br from-amber-900 to-amber-800 border-t border-white/10">
           <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/60 text-sm">
-              © 2025 Inflamm AI. All rights reserved
+              © 2026 Inflamm AI. All rights reserved
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-white/60 hover:text-white text-sm transition-colors">
