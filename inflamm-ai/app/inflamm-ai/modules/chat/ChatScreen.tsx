@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HealthAgentIcon } from '../../components/Icons/HealthAgentIcon';
-import { generateHealthExplanation } from '@/src/services/flammyExplainer';
 import { createChatService } from '@/lib/chat';
 
 interface Message {
