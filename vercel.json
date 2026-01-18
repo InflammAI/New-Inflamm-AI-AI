@@ -3,7 +3,6 @@
   "outputDirectory": "inflamm-ai/.next",
   "installCommand": "cd inflamm-ai && npm install",
   "framework": "nextjs",
-  "rootDirectory": "inflamm-ai",
   "functions": {
     "app/api/**/*.ts": {
       "runtime": "nodejs18.x"
