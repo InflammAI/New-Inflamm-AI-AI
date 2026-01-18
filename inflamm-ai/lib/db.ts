@@ -39,4 +39,6 @@ export const getClient = async () => {
   return await pool.connect();
 };
 
-export default { query, getClient };
+const dbExports = { query, getClient };
+
+export default dbExports;

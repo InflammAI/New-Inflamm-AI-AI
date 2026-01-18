@@ -3,6 +3,7 @@
 import { useWeb3 } from '@/contexts/Web3Provider';
 import { Button, Box, Typography, Avatar, Menu, MenuItem, Divider } from '@mui/material';
 import { useState } from 'react';
+import Image from 'next/image';
 // Format address to show first and last few characters
 const formatAddress = (address: string, chars = 4) => {
   if (!address) return '';
@@ -116,7 +117,7 @@ export const WalletConnectButton = () => {
         <MenuItem sx={{ '&:hover': { backgroundColor: 'transparent' }, cursor: 'default' }}>
           <Box p={1}>
             <Box display="flex" alignItems="center" mb={1}>
-              <img 
+              <Image 
                 src="/metamask-fox.svg" 
                 alt="MetaMask" 
                 width={24} 

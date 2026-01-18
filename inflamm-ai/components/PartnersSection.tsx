@@ -2,24 +2,25 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const PartnersSection = () => {
   const partners = [
     {
       name: "Circular Protocol",
-      logo: <img src="/images/circular-protocol-logo.png" alt="Circular Protocol" className="w-24 h-24 object-contain" />,
+      logo: <Image src="/images/circular-protocol-logo.png" alt="Circular Protocol" width={96} height={96} className="w-24 h-24 object-contain" />,
       website: "#",
       bgColor: "bg-gradient-to-br from-teal-500 to-teal-600"
     },
     {
       name: "IQ Labs",
-      logo: <img src="/images/iq-labs-logo.png" alt="IQ Labs" className="w-24 h-24 object-contain" />,
+      logo: <Image src="/images/iq-labs-logo.png" alt="IQ Labs" width={96} height={96} className="w-24 h-24 object-contain" />,
       website: "#",
       bgColor: "bg-gradient-to-br from-purple-500 to-purple-600"
     },
     {
       name: "Episteme",
-      logo: <img src="/images/episteme-logo.png" alt="Episteme" className="w-24 h-24 object-contain" />,
+      logo: <Image src="/images/episteme-logo.png" alt="Episteme" width={96} height={96} className="w-24 h-24 object-contain" />,
       website: "#",
       bgColor: "bg-gradient-to-br from-amber-500 to-amber-600"
     }
