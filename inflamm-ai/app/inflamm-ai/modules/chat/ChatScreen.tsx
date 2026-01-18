@@ -2,8 +2,29 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HealthAgentIcon } from '../../components/Icons/HealthAgentIcon';
-import { createChatService } from '@/lib/chat';
+import { Heart } from 'lucide-react';
+
+// Simple mock chat service
+const createChatService = () => ({
+  handleIncomingMessage: async (message: string) => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Generate contextual response
+    const responses = [
+      "I understand your concern. Based on what you've shared, it sounds like you're paying attention to your health, which is great. While I can't provide specific medical advice, I can suggest some general wellness practices that might help.",
+      "Thank you for sharing that with me. It's always good to be proactive about health matters. Remember that I provide general information only, and you should consult with healthcare professionals for personalized advice.",
+      "I appreciate you reaching out about this. Health concerns can be worrying, but taking steps to understand them is important. Consider keeping track of any patterns or changes you notice.",
+      "That's a thoughtful question. Many people have similar health questions. While I can offer general wellness information, your healthcare provider would be the best person to give you personalized guidance.",
+    ];
+    
+    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+    
+    return {
+      message: `${randomResponse}\n\n*Disclaimer: This is general information only and not a substitute for professional medical advice. Please consult with healthcare providers for your specific health concerns.*`
+    };
+  }
+});
 
 interface Message {
   id: string;
@@ -242,7 +263,7 @@ Instructions:
       <div className="bg-[var(--surface)] border-b border-gray-800 px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <HealthAgentIcon className="w-8 h-8 text-[var(--accent-orange)]" />
+            <Heart className="w-8 h-8 text-[var(--accent-orange)]" />
             <h1 className="text-xl font-semibold text-white">Health Assistant</h1>
           </div>
           <div className="flex items-center space-x-2">

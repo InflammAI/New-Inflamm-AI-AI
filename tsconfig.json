@@ -4,6 +4,7 @@
     "lib": [
       "dom",
       "dom.iterable",
+      "es2015",
       "esnext"
     ],
     "allowJs": true,
@@ -16,7 +17,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -34,12 +35,16 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "stories/**/*.ts",
+    "stories/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
     "backend",
+    "backend-vitalsync",
     ".next",
-    "out"
+    "out",
+    "inflamm-ai"
   ]
 }
