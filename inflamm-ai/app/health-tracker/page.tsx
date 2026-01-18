@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { IntegratedHealthDashboard } from '@/components/HealthTracker/IntegratedHealthDashboard';
+import { IntegratedHealthDashboard } from '../../components/HealthTracker/IntegratedHealthDashboard';
 
 export const metadata: Metadata = {
   title: 'Health Tracker - App Vital Sync',
