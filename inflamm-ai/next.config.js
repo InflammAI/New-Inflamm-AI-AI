@@ -10,6 +10,8 @@ const nextConfig = {
     '*.repl.co',
     '*.kirk.replit.dev'
   ],
+  // Fix workspace root detection
+  outputFileTracingRoot: __dirname,
   // CORS and CSP headers
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
