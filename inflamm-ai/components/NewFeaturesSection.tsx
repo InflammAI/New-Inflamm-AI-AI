@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Activity, MessageCircle, TrendingUp, Edit3, Heart, Brain, BarChart3, BookOpen } from 'react-feather'
+import { Activity, MessageCircle, TrendingUp, Edit3 } from 'react-feather'
 
 const NewFeaturesSection = () => {
   const features = [
