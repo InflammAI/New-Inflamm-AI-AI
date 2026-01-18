@@ -40,30 +40,6 @@ const Navbar = () => {
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           <motion.a 
-            href="/health-tracker"
-            className="text-dark-gray font-medium hover:text-muted-gray transition-colors duration-200"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-          >
-            Health Tracker
-          </motion.a>
-          <motion.a 
-            href="/wearable"
-            className="text-dark-gray font-medium hover:text-muted-gray transition-colors duration-200"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-          >
-            Wearable Sync
-          </motion.a>
-          <motion.a 
-            href="/vytal-sync"
-            className="text-dark-gray font-medium hover:text-muted-gray transition-colors duration-200"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-          >
-            Vytal Sync
-          </motion.a>
-          <motion.a 
             href="https://www.inflammai.com/inflamm-ai"
             target="_blank"
             rel="noopener noreferrer"
