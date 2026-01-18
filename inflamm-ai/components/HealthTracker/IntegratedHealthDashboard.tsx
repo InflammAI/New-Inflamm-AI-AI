@@ -35,7 +35,7 @@ export const IntegratedHealthDashboard: React.FC = () => {
       fetchRecommendations(storedToken);
       fetchHealthData(storedToken);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLogin = (accessToken: string, userData: any) => {
     setToken(accessToken);
@@ -232,8 +232,8 @@ export const IntegratedHealthDashboard: React.FC = () => {
                 <div className="p-6">
                   <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Recommendations</h2>
                   <div className="space-y-4">
-                    {recommendations.slice(0, 3).map((rec) => (
-                      <RecommendationCard />
+                    {recommendations.slice(0, 3).map((rec, index) => (
+                      <RecommendationCard key={rec.id || index} />
                     ))}
                   </div>
                 </div>
