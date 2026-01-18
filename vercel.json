@@ -2,10 +2,5 @@
   "buildCommand": "cd inflamm-ai && npm run build",
   "outputDirectory": "inflamm-ai/.next",
   "installCommand": "cd inflamm-ai && npm install",
-  "framework": "nextjs",
-  "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  }
+  "framework": "nextjs"
 }
