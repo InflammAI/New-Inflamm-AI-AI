@@ -7,6 +7,30 @@ import { Heart } from 'lucide-react';
 // Simple mock chat service
 const createChatService = () => ({
   handleIncomingMessage: async (message: string) => {
+    // Check for wellness check trigger
+    if (message.toLowerCase().includes('check your wellness')) {
+      return {
+        message: "Let's do a quick wellness check!\nHow are you feeling today on a scale of 1–5?\n\n1️⃣ Very low\n2️⃣ Low\n3️⃣ Somewhere in the middle\n4️⃣ Good\n5️⃣ Great"
+      };
+    }
+
+    // Check for mini-offers trigger
+    if (message.toLowerCase().includes('view mini-offers')) {
+      return {
+        message: "Here is today's mini-offer:\n\nRelax Pack – $0.99\n\nWant to purchase?"
+      };
+    }
+
+    // Check for stress tip trigger
+    if (message.toLowerCase().includes('quick stress tip') || 
+        message.toLowerCase().includes('give a quick stress tip') || 
+        message.toLowerCase().includes('give me a quick stress tip') || 
+        message.toLowerCase().includes('get a quick stress tip')) {
+      return {
+        message: "Here's a quick stress-relief tip:\nTry a slow inhale for 4 seconds, hold for 2, exhale for 6.\n\nWant me to guide you through it?"
+      };
+    }
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
@@ -56,6 +80,71 @@ export const ChatScreen: React.FC = () => {
     'Check your wellness',
     'Get a quick stress tip'
   ]);
+  const [showWellnessCheck, setShowWellnessCheck] = useState(false);
+  const [wellnessResponse, setWellnessResponse] = useState<number | null>(null);
+  const [showMiniOffer, setShowMiniOffer] = useState(false);
+  const [offerPurchased, setOfferPurchased] = useState<boolean | null>(null);
+
+  const handleWellnessResponse = (rating: number) => {
+    setWellnessResponse(rating);
+    setShowWellnessCheck(false);
+    
+    let response = '';
+    switch (rating) {
+      case 1:
+        response = "I'm really sorry you're feeling this low.\nLet's take things gently. Would you like a calming exercise, someone to talk to, or just a moment to breathe together?";
+        break;
+      case 2:
+        response = "Sounds like it's been a rough day.\nI'm here for you — would you prefer a quick mood-lift tip or a relaxing breathing technique?";
+        break;
+      case 3:
+        response = "Alright, you're somewhere in the middle today.\nLet's aim to boost your energy a bit.\nWould you like a healthy snack idea, a stretch suggestion, or a stress tip?";
+        break;
+      case 4:
+        response = "Nice! It sounds like you're doing pretty well today.\nWant a little something to keep the good momentum going?";
+        break;
+      case 5:
+        response = "Love to hear That! 💛 You're feeling great today.\nWant to keep that energy going with a quick challenge or a wellness boost?";
+        break;
+      default:
+        response = "Thank you for sharing! Let's work together to improve your wellness.";
+    }
+    
+    const wellnessMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      role: 'assistant',
+      content: response,
+      timestamp: new Date(),
+    };
+    
+    setMessages(prev => [...prev, wellnessMessage]);
+  };
+
+  const handleMiniOfferResponse = (response: string) => {
+    const lowerResponse = response.toLowerCase();
+    let purchaseResponse = '';
+    
+    if (lowerResponse.includes('yes') || lowerResponse.includes('purchase') || lowerResponse.includes('pls do')) {
+      purchaseResponse = "Transaction Successful!";
+      setOfferPurchased(true);
+    } else if (lowerResponse.includes('no') || lowerResponse.includes('don\'t purchase') || lowerResponse.includes('don\'t')) {
+      purchaseResponse = "Transaction Terminated!";
+      setOfferPurchased(false);
+    } else {
+      purchaseResponse = "Please respond with 'Yes' or 'No' to proceed with the purchase.";
+      return;
+    }
+    
+    const offerMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      role: 'assistant',
+      content: purchaseResponse,
+      timestamp: new Date(),
+    };
+    
+    setMessages(prev => [...prev, offerMessage]);
+    setShowMiniOffer(false);
+  };
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [includeVitals, setIncludeVitals] = useState(false);
@@ -134,6 +223,19 @@ export const ChatScreen: React.FC = () => {
   const generateAIResponse = async (userInput: string): Promise<{ content: string }> => {
     try {
       console.log('Chat processing:', userInput);
+      
+      // Check if this is a wellness check response
+      if (showWellnessCheck && wellnessResponse !== null) {
+        // Handle wellness rating selection
+        handleWellnessResponse(wellnessResponse);
+        return { content: '' };
+      }
+      
+      // Check if this is a mini-offer response
+      if (showMiniOffer) {
+        handleMiniOfferResponse(userInput);
+        return { content: '' };
+      }
       
       // Build conversation history with system prompt
       let prompt = `
@@ -323,12 +425,30 @@ Instructions:
               <motion.button
                 key={index}
                 onClick={() => {
-                  setInput(suggestion);
-                  // Trigger send after a brief delay to allow state update
-                  setTimeout(() => {
-                    const formEvent = new Event('submit', { cancelable: true }) as unknown as React.FormEvent;
-                    handleSend(formEvent);
-                  }, 100);
+                  if (suggestion === 'Check your wellness') {
+                    setShowWellnessCheck(true);
+                    setInput('Check your wellness');
+                    // Trigger send after a brief delay to allow state update
+                    setTimeout(() => {
+                      const formEvent = new Event('submit', { cancelable: true }) as unknown as React.FormEvent;
+                      handleSend(formEvent);
+                    }, 100);
+                  } else if (suggestion === 'View mini-offers') {
+                    setShowMiniOffer(true);
+                    setInput('View mini-offers');
+                    // Trigger send after a brief delay to allow state update
+                    setTimeout(() => {
+                      const formEvent = new Event('submit', { cancelable: true }) as unknown as React.FormEvent;
+                      handleSend(formEvent);
+                    }, 100);
+                  } else {
+                    setInput(suggestion);
+                    // Trigger send after a brief delay to allow state update
+                    setTimeout(() => {
+                      const formEvent = new Event('submit', { cancelable: true }) as unknown as React.FormEvent;
+                      handleSend(formEvent);
+                    }, 100);
+                  }
                 }}
                 className="px-4 py-2 bg-[var(--surface)] text-white border border-gray-800 rounded-lg hover:border-[var(--accent-orange)] transition-colors text-sm"
                 whileHover={{ scale: 1.02 }}
@@ -337,6 +457,104 @@ Instructions:
                 {suggestion}
               </motion.button>
             ))}
+          </motion.div>
+        )}
+
+        {/* Wellness Check UI */}
+        {showWellnessCheck && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-[var(--surface)] border border-gray-800 rounded-2xl p-6 mx-4 max-w-md"
+          >
+            <h3 className="text-lg font-semibold text-white mb-4">How are you feeling today?</h3>
+            <div className="grid grid-cols-5 gap-2 mb-6">
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <motion.button
+                  key={rating}
+                  onClick={() => setWellnessResponse(rating)}
+                  className={`p-4 rounded-lg border-2 transition-all ${
+                    wellnessResponse === rating
+                      ? 'bg-[var(--accent-orange)] border-[var(--accent-orange)] text-white scale-105'
+                      : 'bg-[var(--surface)] border-gray-800 text-gray-300 hover:border-[var(--accent-orange)] hover:text-white'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-1">{rating}</div>
+                    <div className="text-xs">
+                      {rating === 1 && 'Very Low'}
+                      {rating === 2 && 'Low'}
+                      {rating === 3 && 'Somewhere in the middle'}
+                      {rating === 4 && 'Good'}
+                      {rating === 5 && 'Great'}
+                    </div>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+            <div className="flex justify-center">
+              <motion.button
+                onClick={() => setShowWellnessCheck(false)}
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Skip
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Mini-offers UI */}
+        {showMiniOffer && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-[var(--surface)] border border-gray-800 rounded-2xl p-6 mx-4 max-w-md"
+          >
+            <div className="text-center mb-6">
+              <div className="text-2xl mb-2">🛍️</div>
+              <h3 className="text-lg font-semibold text-white mb-2">Today's Mini-Offer</h3>
+              <div className="bg-gradient-to-r from-[var(--accent-orange)] to-[var(--accent-yellow)] rounded-lg p-4 mb-4">
+                <div className="text-white">
+                  <div className="text-xl font-bold mb-1">Relax Pack</div>
+                  <div className="text-2xl font-bold">$0.99</div>
+                </div>
+              </div>
+              <p className="text-gray-300 mb-4">Want to purchase?</p>
+              <div className="flex gap-3 justify-center">
+                <motion.button
+                  onClick={() => {
+                    setInput('Yes');
+                    setTimeout(() => {
+                      const formEvent = new Event('submit', { cancelable: true }) as unknown as React.FormEvent;
+                      handleSend(formEvent);
+                    }, 100);
+                  }}
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Yes
+                </motion.button>
+                <motion.button
+                  onClick={() => {
+                    setInput('No');
+                    setTimeout(() => {
+                      const formEvent = new Event('submit', { cancelable: true }) as unknown as React.FormEvent;
+                      handleSend(formEvent);
+                    }, 100);
+                  }}
+                  className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  No
+                </motion.button>
+              </div>
+            </div>
           </motion.div>
         )}
 
