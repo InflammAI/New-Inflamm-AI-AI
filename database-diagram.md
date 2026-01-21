@@ -4,69 +4,69 @@
 
 ```mermaid
 graph TB
-    %% Core User Tables
-    Users["Users Table<br/>👤 User Profiles<br/>• user_id (PK)<br/>• email, username<br/>• subscription_plan<br/>• family_group_id<br/>• hipaa_consent"]
+    %% Core Tables
+    Users["👤 User Profiles<br/>• user_id (PK)<br/>• email, username<br/>• subscription_plan<br/>• family_group_id<br/>• hipaa_consent"]
     
-    %% Chat System Tables
-    ChatSessions["ChatSessions<br/>💬 Chat Management<br/>• session_id (PK)<br/>• user_id (FK)<br/>• session_type<br/>• wellness_rating<br/>• sentiment_score"]
+    %% Chat System
+    ChatSessions["💬 Chat Management<br/>• session_id (PK)<br/>• user_id (FK)<br/>• session_type<br/>• wellness_rating<br/>• sentiment_score"]
     
-    ChatMessages["ChatMessages<br/>📝 Message Storage<br/>• message_id (PK)<br/>• session_id (FK)<br/>• content<br/>• message_type<br/>• ai_confidence"]
+    ChatMessages["📝 Message Storage<br/>• message_id (PK)<br/>• session_id (FK)<br/>• content<br/>• message_type<br/>• ai_confidence"]
     
-    ChatImages["ChatSessionImages<br/>🖼️ Chat Media<br/>• image_id (PK)<br/>• session_id (FK)<br/>• image_url<br/>• image_type<br/>• upload_source"]
+    ChatImages["🖼️ Chat Media<br/>• image_id (PK)<br/>• session_id (FK)<br/>• image_url<br/>• image_type<br/>• upload_source"]
     
-    %% SciCast System Tables
-    ScientificHypotheses["ScientificHypotheses<br/>🔬 Research Hub<br/>• hypothesis_id (PK)<br/>• creator_user_id (FK)<br/>• title, description<br/>• status<br/>• category"]
+    %% SciCast System
+    ScientificHypotheses["🔬 Research Hub<br/>• hypothesis_id (PK)<br/>• creator_user_id (FK)<br/>• title, description<br/>• status<br/>• category"]
     
-    HypothesisVotes["HypothesisVotes<br/>🗳️ Community Voting<br/>• vote_id (PK)<br/>• hypothesis_id (FK)<br/>• voter_user_id (FK)<br/>• vote_type<br/>• confidence_level"]
+    HypothesisVotes["🗳️ Community Voting<br/>• vote_id (PK)<br/>• hypothesis_id (FK)<br/>• voter_user_id (FK)<br/>• vote_type<br/>• confidence_level"]
     
-    HypothesisEvidence["HypothesisEvidence<br/>📋 Research Evidence<br/>• evidence_id (PK)<br/>• hypothesis_id (FK)<br/>• evidence_data (JSONB)<br/>• credibility_score"]
+    HypothesisEvidence["📋 Research Evidence<br/>• evidence_id (PK)<br/>• hypothesis_id (FK)<br/>• evidence_data (JSONB)<br/>• credibility_score"]
     
-    HypothesisComments["HypothesisComments<br/>💭 Research Discussion<br/>• comment_id (PK)<br/>• hypothesis_id (FK)<br/>• commenter_user_id (FK)<br/>• content<br/>• comment_type"]
+    HypothesisComments["💭 Research Discussion<br/>• comment_id (PK)<br/>• hypothesis_id (FK)<br/>• commenter_user_id (FK)<br/>• content<br/>• comment_type"]
     
-    %% Health & Wellness Tables
-    HealthVitals["HealthVitals<br/>❤️ Health Tracking<br/>• vital_id (PK)<br/>• user_id (FK)<br/>• vital_type, value<br/>• measurement_method<br/>• is_abnormal"]
+    %% Health System
+    HealthVitals["❤️ Health Tracking<br/>• vital_id (PK)<br/>• user_id (FK)<br/>• vital_type, value<br/>• measurement_method<br/>• is_abnormal"]
     
-    VitalImages["VitalImages<br/>📊 Health Charts<br/>• image_id (PK)<br/>• vital_id (FK)<br/>• chart_type<br/>• data_points (JSONB)<br/>• time_range"]
+    VitalImages["📊 Health Charts<br/>• image_id (PK)<br/>• vital_id (FK)<br/>• chart_type<br/>• data_points (JSONB)<br/>• time_range"]
     
-    VitalAlerts["VitalAlerts<br/>🚨 Health Alerts<br/>• alert_id (PK)<br/>• user_id (FK)<br/>• alert_type<br/>• severity<br/>• message"]
+    VitalAlerts["🚨 Health Alerts<br/>• alert_id (PK)<br/>• user_id (FK)<br/>• alert_type<br/>• severity<br/>• message"]
     
-    %% Commerce Tables
-    WellnessKits["WellnessKits<br/>🛍️ Wellness Products<br/>• kit_id (PK)<br/>• kit_name, price<br/>• kit_category<br/>• supplier_name<br/>• is_approved"]
+    %% Commerce System
+    WellnessKits["🛍️ Wellness Products<br/>• kit_id (PK)<br/>• kit_name, price<br/>• kit_category<br/>• supplier_name<br/>• is_approved"]
     
-    KitItems["KitItems<br/>📦 Product Details<br/>• item_id (PK)<br/>• kit_id (FK)<br/>• item_name<br/>• quantity, unit<br/>• ingredients"]
+    KitItems["📦 Product Details<br/>• item_id (PK)<br/>• kit_id (FK)<br/>• item_name<br/>• quantity, unit<br/>• ingredients"]
     
-    KitImages["KitImages<br/>📷 Product Photos<br/>• image_id (PK)<br/>• kit_id (FK)<br/>• image_url<br/>• image_type<br/>• is_primary"]
+    KitImages["📷 Product Photos<br/>• image_id (PK)<br/>• kit_id (FK)<br/>• image_url<br/>• image_type<br/>• is_primary"]
     
-    MicroTransactions["MicroTransactions<br/>💳 Purchase History<br/>• transaction_id (PK)<br/>• user_id (FK)<br/>• item_id (FK)<br/>• total_amount<br/>• payment_status"]
+    MicroTransactions["💳 Purchase History<br/>• transaction_id (PK)<br/>• user_id (FK)<br/>• item_id (FK)<br/>• total_amount<br/>• payment_status"]
     
-    %% Family System Tables
-    FamilyGroups["FamilyGroups<br/>👨‍👩‍👧‍👦 Family Groups<br/>• family_group_id (PK)<br/>• group_name<br/>• primary_member_id (FK)<br/>• max_members<br/>• subscription_plan"]
+    %% Family System
+    FamilyGroups["👨‍👩‍👧‍👦 Family Groups<br/>• family_group_id (PK)<br/>• group_name<br/>• primary_member_id (FK)<br/>• max_members<br/>• subscription_plan"]
     
-    FamilyMembers["FamilyMembers<br/>👥 Family Members<br/>• membership_id (PK)<br/>• family_group_id (FK)<br/>• user_id (FK)<br/>• role<br/>• permissions (JSONB)"]
+    FamilyMembers["👥 Family Members<br/>• membership_id (PK)<br/>• family_group_id (FK)<br/>• user_id (FK)<br/>• role<br/>• permissions (JSONB)"]
     
-    %% Relationships
-    Users -->|has| ChatSessions
-    Users -->|creates| ScientificHypotheses
-    Users -->|votes on| HypothesisVotes
-    Users -->|tracks| HealthVitals
-    Users -->|purchases| MicroTransactions
-    Users -->|belongs to| FamilyGroups
+    %% Key Relationships
+    Users --> ChatSessions
+    Users --> ScientificHypotheses
+    Users --> HypothesisVotes
+    Users --> HealthVitals
+    Users --> MicroTransactions
+    Users --> FamilyGroups
     
-    ChatSessions -->|contains| ChatMessages
-    ChatSessions -->|has images| ChatImages
+    ChatSessions --> ChatMessages
+    ChatSessions --> ChatImages
     
-    ScientificHypotheses -->|receives| HypothesisVotes
-    ScientificHypotheses -->|has evidence| HypothesisEvidence
-    ScientificHypotheses -->|has comments| HypothesisComments
+    ScientificHypotheses --> HypothesisVotes
+    ScientificHypotheses --> HypothesisEvidence
+    ScientificHypotheses --> HypothesisComments
     
-    HealthVitals -->|generates| VitalImages
-    HealthVitals -->|triggers| VitalAlerts
+    HealthVitals --> VitalImages
+    HealthVitals --> VitalAlerts
     
-    WellnessKits -->|contains| KitItems
-    WellnessKits -->|has photos| KitImages
-    WellnessKits -->|sold in| MicroTransactions
+    WellnessKits --> KitItems
+    WellnessKits --> KitImages
+    WellnessKits --> MicroTransactions
     
-    FamilyGroups -->|includes| FamilyMembers
+    FamilyGroups --> FamilyMembers
     
     %% Styling
     classDef userTable fill:#e1f5fe,stroke:#01579b,stroke-width:2px
