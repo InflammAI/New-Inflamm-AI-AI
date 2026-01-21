@@ -5,44 +5,44 @@
 ```mermaid
 graph TB
     %% Core User Tables
-    Users[Users Table<br/>👤 User Profiles<br/>• user_id (PK)<br/>• email, username<br/>• subscription_plan<br/>• family_group_id<br/>• hipaa_consent]
+    Users["Users Table<br/>👤 User Profiles<br/>• user_id (PK)<br/>• email, username<br/>• subscription_plan<br/>• family_group_id<br/>• hipaa_consent"]
     
     %% Chat System Tables
-    ChatSessions[ChatSessions<br/>💬 Chat Management<br/>• session_id (PK)<br/>• user_id (FK)<br/>• session_type<br/>• wellness_rating<br/>• sentiment_score]
+    ChatSessions["ChatSessions<br/>💬 Chat Management<br/>• session_id (PK)<br/>• user_id (FK)<br/>• session_type<br/>• wellness_rating<br/>• sentiment_score"]
     
-    ChatMessages[ChatMessages<br/>📝 Message Storage<br/>• message_id (PK)<br/>• session_id (FK)<br/>• content<br/>• message_type<br/>• ai_confidence]
+    ChatMessages["ChatMessages<br/>📝 Message Storage<br/>• message_id (PK)<br/>• session_id (FK)<br/>• content<br/>• message_type<br/>• ai_confidence"]
     
-    ChatImages[ChatSessionImages<br/>🖼️ Chat Media<br/>• image_id (PK)<br/>• session_id (FK)<br/>• image_url<br/>• image_type<br/>• upload_source]
+    ChatImages["ChatSessionImages<br/>🖼️ Chat Media<br/>• image_id (PK)<br/>• session_id (FK)<br/>• image_url<br/>• image_type<br/>• upload_source"]
     
     %% SciCast System Tables
-    ScientificHypotheses[ScientificHypotheses<br/>🔬 Research Hub<br/>• hypothesis_id (PK)<br/>• creator_user_id (FK)<br/>• title, description<br/>• status<br/>• category]
+    ScientificHypotheses["ScientificHypotheses<br/>🔬 Research Hub<br/>• hypothesis_id (PK)<br/>• creator_user_id (FK)<br/>• title, description<br/>• status<br/>• category"]
     
-    HypothesisVotes[HypothesisVotes<br/>🗳️ Community Voting<br/>• vote_id (PK)<br/>• hypothesis_id (FK)<br/>• voter_user_id (FK)<br/>• vote_type<br/>• confidence_level]
+    HypothesisVotes["HypothesisVotes<br/>🗳️ Community Voting<br/>• vote_id (PK)<br/>• hypothesis_id (FK)<br/>• voter_user_id (FK)<br/>• vote_type<br/>• confidence_level"]
     
-    HypothesisEvidence[HypothesisEvidence<br/>📋 Research Evidence<br/>• evidence_id (PK)<br/>• hypothesis_id (FK)<br/>• evidence_data (JSONB)<br/>• credibility_score]
+    HypothesisEvidence["HypothesisEvidence<br/>📋 Research Evidence<br/>• evidence_id (PK)<br/>• hypothesis_id (FK)<br/>• evidence_data (JSONB)<br/>• credibility_score"]
     
-    HypothesisComments[HypothesisComments<br/>💭 Research Discussion<br/>• comment_id (PK)<br/>• hypothesis_id (FK)<br/>• commenter_user_id (FK)<br/>• content<br/>• comment_type]
+    HypothesisComments["HypothesisComments<br/>💭 Research Discussion<br/>• comment_id (PK)<br/>• hypothesis_id (FK)<br/>• commenter_user_id (FK)<br/>• content<br/>• comment_type"]
     
     %% Health & Wellness Tables
-    HealthVitals[HealthVitals<br/>❤️ Health Tracking<br/>• vital_id (PK)<br/>• user_id (FK)<br/>• vital_type, value<br/>• measurement_method<br/>• is_abnormal]
+    HealthVitals["HealthVitals<br/>❤️ Health Tracking<br/>• vital_id (PK)<br/>• user_id (FK)<br/>• vital_type, value<br/>• measurement_method<br/>• is_abnormal"]
     
-    VitalImages[VitalImages<br/>📊 Health Charts<br/>• image_id (PK)<br/>• vital_id (FK)<br/>• chart_type<br/>• data_points (JSONB)<br/>• time_range]
+    VitalImages["VitalImages<br/>📊 Health Charts<br/>• image_id (PK)<br/>• vital_id (FK)<br/>• chart_type<br/>• data_points (JSONB)<br/>• time_range"]
     
-    VitalAlerts[VitalAlerts<br/>🚨 Health Alerts<br/>• alert_id (PK)<br/>• user_id (FK)<br/>• alert_type<br/>• severity<br/>• message]
+    VitalAlerts["VitalAlerts<br/>🚨 Health Alerts<br/>• alert_id (PK)<br/>• user_id (FK)<br/>• alert_type<br/>• severity<br/>• message"]
     
     %% Commerce Tables
-    WellnessKits[WellnessKits<br/>🛍️ Wellness Products<br/>• kit_id (PK)<br/>• kit_name, price<br/>• kit_category<br/>• supplier_name<br/>• is_approved]
+    WellnessKits["WellnessKits<br/>🛍️ Wellness Products<br/>• kit_id (PK)<br/>• kit_name, price<br/>• kit_category<br/>• supplier_name<br/>• is_approved"]
     
-    KitItems[KitItems<br/>📦 Product Details<br/>• item_id (PK)<br/>• kit_id (FK)<br/>• item_name<br/>• quantity, unit<br/>• ingredients]
+    KitItems["KitItems<br/>📦 Product Details<br/>• item_id (PK)<br/>• kit_id (FK)<br/>• item_name<br/>• quantity, unit<br/>• ingredients"]
     
-    KitImages[KitImages<br/>📷 Product Photos<br/>• image_id (PK)<br/>• kit_id (FK)<br/>• image_url<br/>• image_type<br/>• is_primary]
+    KitImages["KitImages<br/>📷 Product Photos<br/>• image_id (PK)<br/>• kit_id (FK)<br/>• image_url<br/>• image_type<br/>• is_primary"]
     
-    MicroTransactions[MicroTransactions<br/>💳 Purchase History<br/>• transaction_id (PK)<br/>• user_id (FK)<br/>• item_id (FK)<br/>• total_amount<br/>• payment_status]
+    MicroTransactions["MicroTransactions<br/>💳 Purchase History<br/>• transaction_id (PK)<br/>• user_id (FK)<br/>• item_id (FK)<br/>• total_amount<br/>• payment_status"]
     
     %% Family System Tables
-    FamilyGroups[FamilyGroups<br/>👨‍👩‍👧‍👦 Family Groups<br/>• family_group_id (PK)<br/>• group_name<br/>• primary_member_id (FK)<br/>• max_members<br/>• subscription_plan]
+    FamilyGroups["FamilyGroups<br/>👨‍👩‍👧‍👦 Family Groups<br/>• family_group_id (PK)<br/>• group_name<br/>• primary_member_id (FK)<br/>• max_members<br/>• subscription_plan"]
     
-    FamilyMembers[FamilyMembers<br/>👥 Family Members<br/>• membership_id (PK)<br/>• family_group_id (FK)<br/>• user_id (FK)<br/>• role<br/>• permissions (JSONB)]
+    FamilyMembers["FamilyMembers<br/>👥 Family Members<br/>• membership_id (PK)<br/>• family_group_id (FK)<br/>• user_id (FK)<br/>• role<br/>• permissions (JSONB)"]
     
     %% Relationships
     Users -->|has| ChatSessions
