@@ -196,7 +196,7 @@ sequenceDiagram
 ## SciCast System Workflow
 
 ```mermaid
-flowchart TD
+graph TD
     Start([🚀 Start]) --> CreateHypothesis[💡 Create Hypothesis]
     CreateHypothesis --> SubmitReview[📋 Submit for Review]
     SubmitReview --> ReviewDecision{🔍 Review Decision}
@@ -232,33 +232,29 @@ flowchart TD
 
 ```mermaid
 graph TB
-    subgraph "Data Sources"
-        Wearables[⌚ Wearables]
-        ManualEntry[✍️ Manual Entry]
-        MedicalDevices[🏥 Medical Devices]
-        ThirdPartyAPIs[🔌 Third-party APIs]
-    end
+    %% Data Sources
+    Wearables[⌚ Wearables]
+    ManualEntry[✍️ Manual Entry]
+    MedicalDevices[🏥 Medical Devices]
+    ThirdPartyAPIs[🔌 Third-party APIs]
     
-    subgraph "Data Processing"
-        DataValidation[✅ Data Validation]
-        Normalization[📊 Normalization]
-        AnomalyDetection[🚨 Anomaly Detection]
-        TrendAnalysis[📈 Trend Analysis]
-    end
+    %% Data Processing
+    DataValidation[✅ Data Validation]
+    Normalization[📊 Normalization]
+    AnomalyDetection[🚨 Anomaly Detection]
+    TrendAnalysis[📈 Trend Analysis]
     
-    subgraph "Storage & Analytics"
-        RawData[(🗄️ Raw Data)]
-        ProcessedData[(📊 Processed Data)]
-        Analytics[(📈 Analytics)]
-        Charts[(📋 Charts)]
-    end
+    %% Storage & Analytics
+    RawData[(🗄️ Raw Data)]
+    ProcessedData[(📊 Processed Data)]
+    Analytics[(📈 Analytics)]
+    Charts[(📋 Charts)]
     
-    subgraph "User Interface"
-        Dashboard[📱 Health Dashboard]
-        Alerts[🔔 Health Alerts]
-        Reports[📋 Health Reports]
-        ChatIntegration[💬 Chat Integration]
-    end
+    %% User Interface
+    Dashboard[📱 Health Dashboard]
+    Alerts[🔔 Health Alerts]
+    Reports[📋 Health Reports]
+    ChatIntegration[💬 Chat Integration]
     
     %% Data Flow
     Wearables --> DataValidation
