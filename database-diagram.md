@@ -88,39 +88,34 @@ graph TB
 
 ```mermaid
 graph LR
-    subgraph "Frontend Layer"
-        WebApp[🌐 Web Application]
-        MobileApp[📱 Mobile App]
-        ChatUI[💬 Chat Interface]
-        SciCastUI[🔬 SciCast Portal]
-    end
+    %% Frontend Layer
+    WebApp[Web Application]
+    MobileApp[Mobile App]
+    ChatUI[Chat Interface]
+    SciCastUI[SciCast Portal]
     
-    subgraph "API Layer"
-        ChatAPI[💬 Chat API]
-        SciCastAPI[🔬 SciCast API]
-        HealthAPI[❤️ Health API]
-        CommerceAPI[🛍️ Commerce API]
-        FamilyAPI[👨‍👩‍👧‍👦 Family API]
-    end
+    %% API Layer
+    ChatAPI[Chat API]
+    SciCastAPI[SciCast API]
+    HealthAPI[Health API]
+    CommerceAPI[Commerce API]
+    FamilyAPI[Family API]
     
-    subgraph "Business Logic Layer"
-        AIService[🤖 AI Service]
-        AnalyticsService[📊 Analytics Service]
-        NotificationService[🔔 Notification Service]
-        PaymentService[💳 Payment Service]
-    end
+    %% Business Logic Layer
+    AIService[AI Service]
+    AnalyticsService[Analytics Service]
+    NotificationService[Notification Service]
+    PaymentService[Payment Service]
     
-    subgraph "Database Layer"
-        PostgreSQL[(🐘 PostgreSQL)]
-        Redis[(⚡ Redis Cache)]
-        S3Storage[(📦 S3 Storage)]
-    end
+    %% Database Layer
+    PostgreSQL[(PostgreSQL)]
+    Redis[(Redis Cache)]
+    S3Storage[(S3 Storage)]
     
-    subgraph "External Services"
-        EmailService[📧 Email Service]
-        PaymentGateway[💰 Payment Gateway]
-        HealthDevices[🏥 Health Devices]
-    end
+    %% External Services
+    EmailService[Email Service]
+    PaymentGateway[Payment Gateway]
+    HealthDevices[Health Devices]
     
     %% Connections
     WebApp --> ChatAPI
@@ -160,11 +155,11 @@ graph LR
 
 ```mermaid
 sequenceDiagram
-    participant U as 👤 User
-    participant C as 💬 Chat UI
-    participant A as 🤖 AI Service
-    participant DB as 🐘 Database
-    participant S as 📦 Storage
+    participant U as User
+    participant C as Chat UI
+    participant A as AI Service
+    participant DB as Database
+    participant S as Storage
     
     U->>C: Send message
     C->>A: Process message
