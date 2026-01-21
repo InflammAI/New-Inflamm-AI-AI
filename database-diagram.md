@@ -197,24 +197,24 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    Start([🚀 Start]) --> CreateHypothesis[💡 Create Hypothesis]
-    CreateHypothesis --> SubmitReview[📋 Submit for Review]
-    SubmitReview --> ReviewDecision{🔍 Review Decision}
+    Start([Start]) --> CreateHypothesis[Create Hypothesis]
+    CreateHypothesis --> SubmitReview[Submit for Review]
+    SubmitReview --> ReviewDecision{Review Decision}
     
-    ReviewDecision -->|✅ Approved| CommunityVote[🗳️ Community Voting]
-    ReviewDecision -->|❌ Rejected| ReviseHypothesis[✏️ Revise Hypothesis]
+    ReviewDecision -->|Approved| CommunityVote[Community Voting]
+    ReviewDecision -->|Rejected| ReviseHypothesis[Revise Hypothesis]
     ReviseHypothesis --> SubmitReview
     
-    CommunityVote --> VoteThreshold{📊 Vote Threshold Met?}
-    VoteThreshold -->|✅ Yes| ResearchPhase[🔬 Research Phase]
-    VoteThreshold -->|❌ No| GatherEvidence[📈 Gather More Evidence]
+    CommunityVote --> VoteThreshold{Vote Threshold Met?}
+    VoteThreshold -->|Yes| ResearchPhase[Research Phase]
+    VoteThreshold -->|No| GatherEvidence[Gather More Evidence]
     GatherEvidence --> CommunityVote
     
-    ResearchPhase --> DataCollection[📊 Data Collection]
-    DataCollection --> Analysis[📉 Data Analysis]
-    Analysis --> Results[📋 Research Results]
-    Results --> Publish[🌐 Publish Findings]
-    Publish --> End([✅ Complete])
+    ResearchPhase --> DataCollection[Data Collection]
+    DataCollection --> Analysis[Data Analysis]
+    Analysis --> Results[Research Results]
+    Results --> Publish[Publish Findings]
+    Publish --> End([Complete])
     
     %% Styling
     classDef startEnd fill:#4caf50,color:#fff
@@ -233,28 +233,28 @@ graph TD
 ```mermaid
 graph TB
     %% Data Sources
-    Wearables[⌚ Wearables]
-    ManualEntry[✍️ Manual Entry]
-    MedicalDevices[🏥 Medical Devices]
-    ThirdPartyAPIs[🔌 Third-party APIs]
+    Wearables[Wearables]
+    ManualEntry[Manual Entry]
+    MedicalDevices[Medical Devices]
+    ThirdPartyAPIs[Third-party APIs]
     
     %% Data Processing
-    DataValidation[✅ Data Validation]
-    Normalization[📊 Normalization]
-    AnomalyDetection[🚨 Anomaly Detection]
-    TrendAnalysis[📈 Trend Analysis]
+    DataValidation[Data Validation]
+    Normalization[Normalization]
+    AnomalyDetection[Anomaly Detection]
+    TrendAnalysis[Trend Analysis]
     
     %% Storage & Analytics
-    RawData[(🗄️ Raw Data)]
-    ProcessedData[(📊 Processed Data)]
-    Analytics[(📈 Analytics)]
-    Charts[(📋 Charts)]
+    RawData[(Raw Data)]
+    ProcessedData[(Processed Data)]
+    Analytics[(Analytics)]
+    Charts[(Charts)]
     
     %% User Interface
-    Dashboard[📱 Health Dashboard]
-    Alerts[🔔 Health Alerts]
-    Reports[📋 Health Reports]
-    ChatIntegration[💬 Chat Integration]
+    Dashboard[Health Dashboard]
+    Alerts[Health Alerts]
+    Reports[Health Reports]
+    ChatIntegration[Chat Integration]
     
     %% Data Flow
     Wearables --> DataValidation
