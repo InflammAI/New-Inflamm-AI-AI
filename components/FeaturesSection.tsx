@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+// Updated with motion animations for CTA button
 import { motion } from 'framer-motion'
 import { Activity, MessageCircle, TrendingUp, Edit3, Zap } from 'react-feather'
 
