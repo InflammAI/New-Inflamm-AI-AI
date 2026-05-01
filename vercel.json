@@ -1,7 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "installCommand": "npm install",
-  "framework": "nextjs",
-  "rootDirectory": "inflamm-ai"
+  "buildCommand": "cd inflamm-ai && npm run build",
+  "outputDirectory": "inflamm-ai/.next",
+  "installCommand": "cd inflamm-ai && npm install",
+  "framework": "nextjs"
 }
