@@ -19,7 +19,7 @@ import {
 
 const endpoint = process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT || 'https://api.mainnet-beta.solana.com';
 
-export const WalletConnectionProvider = ({ children }: { children: React.ReactNode }) => {
+export const WalletConnectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const wallets = useMemo(
         () => [
             new PhantomWalletAdapter(),
