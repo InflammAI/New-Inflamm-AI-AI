@@ -10,6 +10,7 @@ import { VitalsyncScreen } from './modules/vitalsync/VitalsyncScreen';
 import { ChatScreen } from './modules/chat/ChatScreen';
 import { SciCastScreen } from './modules/scicast/SciCastScreen';
 import { BlogScreen } from './modules/blog/BlogScreen';
+import PeptideSyncScreen from './modules/peptidesync/PeptideSyncScreen';
 import { WalletConnectionProvider } from './providers/SolanaWalletProvider';
 import { TonWalletProvider } from './providers/TonWalletProvider';
 import { ParticleBackground } from './components/Background/ParticleBackground';
@@ -96,6 +97,12 @@ export default function InflammAIPage() {
         return (
           <WalletGate>
             <BlogScreen />
+          </WalletGate>
+        );
+      case 'peptidesync':
+        return (
+          <WalletGate>
+            <PeptideSyncScreen />
           </WalletGate>
         );
       default:

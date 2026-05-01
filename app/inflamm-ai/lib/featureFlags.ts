@@ -4,6 +4,7 @@ export const FEATURE_FLAGS = {
   FEATURE_CHAT: true,
   FEATURE_SCICAST: true,
   FEATURE_BLOG: true,
+  FEATURE_PEPTIDESYNC: true,
   FEATURE_QUANTUM_BG: true,
 } as const;
 

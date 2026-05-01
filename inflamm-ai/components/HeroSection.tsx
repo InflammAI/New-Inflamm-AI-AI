@@ -149,7 +149,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
         >
           Experience the future of personal health management with our integrated platform featuring 
-          real-time vitals monitoring, AI-powered health chat, scientific insights, and wellness education.
+          real-time vitals monitoring, AI-powered health chat, scientific insights, wellness education, and peptide therapy tracking.
         </motion.p>
 
         {/* Feature Pills */}
@@ -175,6 +175,24 @@ const HeroSection = () => {
             <span className="text-sm">●</span>
             <span>Wellness Blog</span>
           </div>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 text-red-600 font-medium">
+            <span className="text-sm">●</span>
+            <span>PeptideSync</span>
+          </div>
+        </motion.div>
+
+        {/* All In One App Text */}
+        <motion.div 
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+        >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-dark-gray mb-2">
+            All In One
+            <span className="text-orange-500"> App</span>
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-orange-600 mx-auto rounded-full"></div>
         </motion.div>
 
         {/* Watch Visualization */}

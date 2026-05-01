@@ -4,7 +4,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SidebarItem } from './SidebarItem';
 import { Logo } from '../Logo/Logo';
-import { IconVyTap, IconVitals, IconChat, IconSciCast, IconBlog } from './icons';
+import { IconVyTap, IconVitals, IconChat, IconSciCast, IconBlog, IconPeptideSync } from './icons';
 import { isFeatureEnabled } from '@/app/inflamm-ai/lib/featureFlags';
 
 interface SidebarProps {
@@ -19,6 +19,7 @@ const SIDEBAR_ITEMS = [
   { id: 'chat', label: 'Chat', Icon: IconChat, feature: 'FEATURE_CHAT' as const },
   { id: 'scicast', label: 'SciCast', Icon: IconSciCast, feature: 'FEATURE_SCICAST' as const },
   { id: 'blog', label: 'Blog', Icon: IconBlog, feature: 'FEATURE_BLOG' as const },
+  { id: 'peptidesync', label: 'PeptideSync', Icon: IconPeptideSync, feature: 'FEATURE_PEPTIDESYNC' as const },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({
