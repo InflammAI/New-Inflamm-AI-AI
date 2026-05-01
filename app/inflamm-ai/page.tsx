@@ -7,7 +7,6 @@ import { Header } from './components/Header/Header';
 import { WalletGate } from './components/WalletGate/WalletGate';
 import { VyTapScreen } from './modules/vytap/VyTapScreen';
 import { VitalsyncScreen } from './modules/vitalsync/VitalsyncScreen';
-import { ChatScreen } from './modules/chat/ChatScreen';
 import { SciCastScreen } from './modules/scicast/SciCastScreen';
 import { BlogScreen } from './modules/blog/BlogScreen';
 import PeptideSyncScreen from './modules/peptidesync/PeptideSyncScreen';
@@ -79,12 +78,6 @@ export default function InflammAIPage() {
         return (
           <WalletGate>
             <VitalsyncScreen />
-          </WalletGate>
-        );
-      case 'chat':
-        return (
-          <WalletGate>
-            <ChatScreen />
           </WalletGate>
         );
       case 'scicast':
