@@ -1,38 +1,39 @@
 'use client';
 
-import React, { useMemo, useEffect, ReactNode } from 'react';
-import {
-    ConnectionProvider,
-    WalletProvider
-} from '@solana/wallet-adapter-react';
+import React, { useMemo, useEffect } from 'react';
 
-import {
-    PhantomWalletAdapter,
-    SolflareWalletAdapter,
-    TorusWalletAdapter,
-    CoinbaseWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-
-import {
-    WalletModalProvider
-} from '@solana/wallet-adapter-react-ui';
+// Dynamic imports to avoid type conflicts during build
+const ConnectionProvider = React.lazy(() => 
+  import('@solana/wallet-adapter-react').then(mod => ({ default: mod.ConnectionProvider }))
+);
+const WalletProvider = React.lazy(() => 
+  import('@solana/wallet-adapter-react').then(mod => ({ default: mod.WalletProvider }))
+);
+const WalletModalProvider = React.lazy(() => 
+  import('@solana/wallet-adapter-react-ui').then(mod => ({ default: mod.WalletModalProvider }))
+);
 
 const endpoint = process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT || 'https://api.mainnet-beta.solana.com';
 
-interface WalletConnectionProviderProps {
-    children: ReactNode;
-}
-
-export const WalletConnectionProvider: React.FC<WalletConnectionProviderProps> = ({ children }) => {
-    const wallets = useMemo(
-        () => [
-            new PhantomWalletAdapter(),
-            new SolflareWalletAdapter(),
-            new TorusWalletAdapter(),
-            new CoinbaseWalletAdapter(),
-        ],
-        []
-    );
+export const WalletConnectionProvider = ({ children }: { children: React.ReactNode }) => {
+    const wallets = useMemo(() => {
+        if (typeof window === 'undefined') return [];
+        
+        try {
+            const { PhantomWalletAdapter, SolflareWalletAdapter, TorusWalletAdapter, CoinbaseWalletAdapter } = 
+                require('@solana/wallet-adapter-wallets');
+            
+            return [
+                new PhantomWalletAdapter(),
+                new SolflareWalletAdapter(),
+                new TorusWalletAdapter(),
+                new CoinbaseWalletAdapter(),
+            ];
+        } catch (error) {
+            console.warn('Wallet adapters not available:', error);
+            return [];
+        }
+    }, []);
 
     // Auto-reset wallet connection on app refresh
     useEffect(() => {
@@ -43,20 +44,20 @@ export const WalletConnectionProvider: React.FC<WalletConnectionProviderProps> =
             localStorage.removeItem('walletName');
             localStorage.removeItem('walletAdapter');
             
-            // Note: We preserve 'hasEverConnectedWallet' flag for UX purposes
-            // This helps us show helpful messages only to returning users
             console.log('✅ Wallet connection reset complete');
         }
     }, [wallets]);
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect={false}>
-                <WalletModalProvider>
-                    {children}
-                </WalletModalProvider>
-            </WalletProvider>
-        </ConnectionProvider>
+        <React.Suspense fallback={<div>{children}</div>}>
+            <ConnectionProvider endpoint={endpoint}>
+                <WalletProvider wallets={wallets} autoConnect={false}>
+                    <WalletModalProvider>
+                        {children}
+                    </WalletModalProvider>
+                </WalletProvider>
+            </ConnectionProvider>
+        </React.Suspense>
     );
 };
 

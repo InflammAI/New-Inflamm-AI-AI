@@ -24,7 +24,7 @@ export function WalletButton() {
     
     // Check if wallet is available
     if (typeof window !== 'undefined') {
-      console.log('🔵 [WalletButton] Window.solana exists?', !!window.solana);
+      console.log('🔵 [WalletButton] Window.solana exists?', !!(window as any).solana);
       console.log('🔵 [WalletButton] Window.phantom exists?', !!(window as any).phantom);
     }
     
