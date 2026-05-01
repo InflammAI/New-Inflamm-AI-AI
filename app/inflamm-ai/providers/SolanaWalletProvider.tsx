@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, ReactNode } from 'react';
 import {
     ConnectionProvider,
     WalletProvider
@@ -19,7 +19,11 @@ import {
 
 const endpoint = process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT || 'https://api.mainnet-beta.solana.com';
 
-export const WalletConnectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface WalletConnectionProviderProps {
+    children: ReactNode;
+}
+
+export const WalletConnectionProvider: React.FC<WalletConnectionProviderProps> = ({ children }) => {
     const wallets = useMemo(
         () => [
             new PhantomWalletAdapter(),
